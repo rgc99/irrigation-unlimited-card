@@ -2,6 +2,46 @@ default_config:
 lovelace:
   mode: yaml
   resources:
-  - url: http://127.0.0.1:5000/boilerplate-card.js
+  - url: http://127.0.0.1:5000/irrigation-unlimited-card.js
     type: module
 demo:
+
+logger:
+  default: info
+  logs:
+    custom_components.irrigation_unlimited: debug
+
+irrigation_unlimited:
+  granularity: 10
+  refresh_interval: 10
+  controllers:
+    - name: 'My Garden'
+      enabled: true
+      zones:
+        - name: 'Front Lawn'
+        - name: 'Vege Patch'
+        - name: 'Roses'
+        - name: 'Back Yard'
+      sequences:
+        - name: 'Morning'
+          duration: '0:10:00'
+          delay: '0:00:10'
+          schedules:
+            - name: 'Sunrise'
+              time:
+                sun: 'sunrise'
+          zones:
+            - zone_id: 1
+            - zone_id: 2
+            - zone_id: 4
+        - name: 'Evening'
+          duration: '0:10:00'
+          delay: '0:00:10'
+          schedules:
+            - name: 'Dusk'
+              time:
+                sun: 'sunset'
+          zones:
+            - zone_id: 1
+            - zone_id: [2,3]
+            - zone_id: 4
