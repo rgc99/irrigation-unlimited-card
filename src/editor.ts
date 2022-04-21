@@ -1,74 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LitElement, html, TemplateResult, css, CSSResultGroup } from 'lit';
+import { LitElement, html, TemplateResult, css, CSSResultGroup, nothing } from 'lit';
 import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helpers';
 
-import { ScopedRegistryHost } from '@lit-labs/scoped-registry-mixin';
 import { IrrigationUnlimitedCardConfig } from './types';
 import { customElement, property, state } from 'lit/decorators';
-import { formfieldDefinition } from '../elements/formfield';
-import { selectDefinition } from '../elements/select';
-import { switchDefinition } from '../elements/switch';
-import { textfieldDefinition } from '../elements/textfield';
 
 @customElement('irrigation-unlimited-card-editor')
-export class IrrigationUnlimitedCardEditor extends ScopedRegistryHost(LitElement) implements LovelaceCardEditor {
+export class IrrigationUnlimitedCardEditor extends LitElement {
+
   @property({ attribute: false }) public hass?: HomeAssistant;
-
   @state() private _config?: IrrigationUnlimitedCardConfig;
-
-  @state() private _helpers?: any;
-
-  private _initialized = false;
-
-  static elementDefinitions = {
-    ...textfieldDefinition,
-    ...selectDefinition,
-    ...switchDefinition,
-    ...formfieldDefinition,
-  };
 
   public setConfig(config: IrrigationUnlimitedCardConfig): void {
     this._config = config;
-
-    this.loadCardHelpers();
-  }
-
-  protected shouldUpdate(): boolean {
-    if (!this._initialized) {
-      this._initialize();
-    }
-
-    return true;
   }
 
   get _name(): string {
     return this._config?.name || '';
   }
 
-  protected render(): TemplateResult | void {
-    if (!this.hass || !this._helpers) {
-      return html``;
+  protected render(): TemplateResult | typeof nothing {
+    if (!this.hass) {
+      return nothing;
     }
 
     return html`
-      <mwc-textfield
+      <paper-input
         label="Name (Optional)"
         .value=${this._name}
         .configValue=${'name'}
-        @input=${this._valueChanged}
-      ></mwc-textfield>
+        @value-changed=${this._valueChanged}
+      ></paper-input>
     `;
-  }
-
-  private _initialize(): void {
-    if (this.hass === undefined) return;
-    if (this._config === undefined) return;
-    if (this._helpers === undefined) return;
-    this._initialized = true;
-  }
-
-  private async loadCardHelpers(): Promise<void> {
-    this._helpers = await (window as any).loadCardHelpers();
   }
 
   private _valueChanged(ev): void {
@@ -95,9 +58,5 @@ export class IrrigationUnlimitedCardEditor extends ScopedRegistryHost(LitElement
   }
 
   static styles: CSSResultGroup = css`
-    mwc-textfield {
-      margin-bottom: 16px;
-      display: block;
-    }
   `;
 }

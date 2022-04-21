@@ -1,6 +1,6 @@
 {
   "name": "irrigation-unlimited-card",
-  "version": "1.4.1",
+  "version": "1.0.0",
   "description": "Irrigation Unlimited card",
   "keywords": [
     "home-assistant",
@@ -8,10 +8,11 @@
     "hass",
     "automation",
     "lovelace",
-    "custom-cards"
+    "custom-cards",
+    "irrigation"
   ],
   "module": "irrigation-unlimited-card.js",
-  "repository": "https://github.com/rgc99/boilerplate-card",
+  "repository": "https://github.com/rgc99/irrigation-unlimited-card",
   "author": "rgc99",
   "license": "MIT",
   "dependencies": {
@@ -47,8 +48,9 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-serve": "^1.1.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.30.0",
-    "typescript": "^4.4.3"
+    "rollup-plugin-typescript2": "^0.31.2",
+    "tslib": "^2.3.1",
+    "typescript": "^4.6.3"
   },
   "resolutions": {
     "lit": "^2.1.2",
