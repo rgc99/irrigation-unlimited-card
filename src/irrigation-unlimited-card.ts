@@ -5,6 +5,7 @@ import { customElement, property, state } from 'lit/decorators';
 import {
   HomeAssistant,
   hasConfigOrEntityChanged,
+  LovelaceCardEditor,
 } from 'custom-card-helpers';
 
 import type { IrrigationUnlimitedCardConfig } from './types';
@@ -34,19 +35,19 @@ export class IrrigationUnlimitedCard extends LitElement {
   private _entities: Array<string> | undefined = undefined;
   private _last_update: Date | undefined = undefined;
 
-  public static async getConfigElement() {
+  public static async getConfigElement(): Promise<LovelaceCardEditor> {
     await import('./editor');
     return document.createElement('irrigation-unlimited-card-editor');
   }
 
-  setConfig(config: IrrigationUnlimitedCardConfig) {
+  setConfig(config: IrrigationUnlimitedCardConfig): void {
     if (!config) {
       throw new Error(localize('common.invalid_configuration'));
     }
     this.config = config;
   }
 
-  public static getStubConfig() {
+  public static getStubConfig(): {} {
     return {};
   }
 

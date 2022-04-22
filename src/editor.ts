@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { LitElement, html, TemplateResult, css, CSSResultGroup, nothing } from 'lit';
-import { HomeAssistant, fireEvent, LovelaceCardEditor } from 'custom-card-helpers';
+import { HomeAssistant, fireEvent } from 'custom-card-helpers';
 
 import { IrrigationUnlimitedCardConfig } from './types';
 import { customElement, property, state } from 'lit/decorators';
