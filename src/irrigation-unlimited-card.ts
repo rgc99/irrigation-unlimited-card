@@ -47,7 +47,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     this.config = config;
   }
 
-  public static getStubConfig(): {} {
+  public static getStubConfig(): Record<string, unknown> {
     return {};
   }
 
