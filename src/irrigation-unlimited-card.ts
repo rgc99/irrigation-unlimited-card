@@ -36,7 +36,6 @@ export class IrrigationUnlimitedCard extends LitElement {
   private _last_update: Date | undefined = undefined;
 
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
-    await import('./editor');
     return document.createElement('irrigation-unlimited-card-editor');
   }
 
