@@ -136,6 +136,7 @@ export class IrrigationUnlimitedCard extends LitElement {
 
     return html`
       <div class="iu-controller">
+        <hr>
         <div class=${classes.join(' ')}>
             <div class="iu-td1"></div>
             <div class="iu-td2"><ha-icon .icon=${stateObj.attributes.icon}></ha-icon></div>
