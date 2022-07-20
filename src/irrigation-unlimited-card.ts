@@ -104,9 +104,7 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-td6"><ha-icon icon="mdi:delta"></ha-icon></div>
           <div class="iu-td7"><ha-icon icon="mdi:toggle-switch-outline"></ha-icon></div>
         </div>
-        <div class="iu-controller">
-          ${Array.from(Array(this.hass.states['irrigation_unlimited.coordinator'].attributes.controller_count).keys()).map((index: number) => this._renderController(index))}
-        </div>
+        ${Array.from(Array(this.hass.states['irrigation_unlimited.coordinator'].attributes.controller_count).keys()).map((index: number) => this._renderController(index))}
       </ha-card>
     `;
   }
@@ -137,7 +135,8 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isEnabled) classes.push('iu-enabled')
 
     return html`
-          <div class=${classes.join(' ')}>
+      <div class="iu-controller">
+        <div class=${classes.join(' ')}>
             <div class="iu-td1"></div>
             <div class="iu-td2"><ha-icon .icon=${stateObj.attributes.icon}></ha-icon></div>
             <div class="iu-td3">
@@ -175,7 +174,8 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-sequences iu-content iu-hidden">
             <hr>
             ${stateObj.attributes.sequence_status.map((sequence: number) => this._renderSequence(controller, sequence))}
-          </div>
+        </div>
+      </div>
     `;
   }
 
