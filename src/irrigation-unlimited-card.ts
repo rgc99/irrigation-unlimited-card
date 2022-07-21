@@ -95,7 +95,7 @@ export class IrrigationUnlimitedCard extends LitElement {
         .header=${this.config.name}
         tabindex="0"
       >
-        <div class="iu-td">
+        <div class="iu-header-row iu-td">
           <div class="iu-td1"></div>
           <div class="iu-td2"></div>
           <div class="iu-td3"></div>
@@ -104,7 +104,9 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-td6"><ha-icon icon="mdi:delta"></ha-icon></div>
           <div class="iu-td7"><ha-icon icon="mdi:toggle-switch-outline"></ha-icon></div>
         </div>
-        ${Array.from(Array(this.hass.states['irrigation_unlimited.coordinator'].attributes.controller_count).keys()).map((index: number) => this._renderController(index))}
+        <div class="iu-controllers">
+          ${Array.from(Array(this.hass.states['irrigation_unlimited.coordinator'].attributes.controller_count).keys()).map((index: number) => this._renderController(index))}
+        </div>
       </ha-card>
     `;
   }
@@ -130,51 +132,59 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (!isNaN(start.getTime())) {
       startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
     }
-    const classes: Array<string> = ['iu-td'];
+    const classes: Array<string> = ['iu-controller-row iu-td'];
     if (isOn) classes.push('iu-on')
     if (isEnabled) classes.push('iu-enabled')
 
     return html`
       <div class="iu-controller">
-        <hr>
+      <hr>
         <div class=${classes.join(' ')}>
-            <div class="iu-td1"></div>
-            <div class="iu-td2"><ha-icon .icon=${stateObj.attributes.icon}></ha-icon></div>
-            <div class="iu-td3">
-              <span>${controller + 1}</span>
-              <span class="iu-name">${stateObj.attributes.friendly_name}</span>
-            </div>
-            <div class="iu-td4">
-              <div ?hidden=${!isEnabled}>
-                <span class="iu-schedule">${schedule_name}</span>
-                <span class="iu-start" ?hidden=${isOn}><br>${startStr}</span>
-              </div>
-            </div>
-            <div class="iu-td5 iu-duration">
-              <div ?hidden=${!isEnabled}>
-                ${duration}
-              </div>
-            </div>
-            <div class="iu-td6"></div>
-            <div class="iu-td7">
-              <ha-switch
-                .checked=${isEnabled}
-                iukey="${controller + 1}.0.0.0"
-                @change="${this._toggleEnable}"
-              ></ha-switch>
+          <div class="iu-td1"></div>
+          <div class="iu-td2">
+            <ha-icon .icon=${stateObj.attributes.icon}></ha-icon>
+          </div>
+          <div class="iu-td3">
+            <span>${controller + 1}</span>
+            <span class="iu-name">${stateObj.attributes.friendly_name}</span>
+          </div>
+          <div class="iu-td4">
+            <div ?hidden=${!isEnabled}>
+              <span class="iu-schedule">${schedule_name}</span>
+              <span class="iu-start" ?hidden=${isOn}><br>${startStr}</span>
             </div>
           </div>
-          <div class="iu-control-panel">
-            <div class="iu-control-panel-item"><label>Zones&nbsp;</label><ha-switch @change="${this._toggleZones}"></ha-switch></div>
-            <div class="iu-control-panel-item"><label>Sequences&nbsp;</label><ha-switch @change="${this._toggleSequences}"></ha-switch></div>
+          <div class="iu-td5 iu-duration">
+            <div ?hidden=${!isEnabled}>
+              ${duration}
+            </div>
           </div>
-          <div class="iu-zones iu-content iu-hidden">
-            <hr>
-            ${Array.from(Array(stateObj.attributes.zone_count).keys()).map((zone: number) => this._renderZone(controller, zone))}
+          <div class="iu-td6"></div>
+          <div class="iu-td7">
+            <ha-switch
+              .checked=${isEnabled}
+              iukey="${controller + 1}.0.0.0"
+              @change="${this._toggleEnable}"
+            ></ha-switch>
           </div>
-          <div class="iu-sequences iu-content iu-hidden">
-            <hr>
-            ${stateObj.attributes.sequence_status.map((sequence: number) => this._renderSequence(controller, sequence))}
+        </div>
+        <div class="iu-control-panel">
+          <div class="iu-control-panel-item">
+            <label>Zones&nbsp;</label>
+            <ha-switch @change="${this._toggleZones}"></ha-switch>
+          </div>
+          <div class="iu-control-panel-item">
+            <label>Sequences&nbsp;</label>
+            <ha-switch @change="${this._toggleSequences}"></ha-switch>
+          </div>
+        </div>
+        <div class="iu-zones iu-content iu-hidden">
+          <hr>
+          ${Array.from(Array(stateObj.attributes.zone_count).keys()).map((zone: number) => this._renderZone(controller, zone))}
+        </div>
+        <div class="iu-sequences iu-content iu-hidden">
+          <hr>
+          ${stateObj.attributes.sequence_status.map((sequence: number) => this._renderSequence(controller, sequence))}
         </div>
       </div>
     `;
@@ -209,48 +219,53 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (!isNaN(start.getTime())) {
       startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
     }
-    const classes: Array<string> = ['iu-td'];
+    const classes: Array<string> = ['iu-zone-row iu-td'];
     if (isOn) classes.push('iu-on');
     if (isEnabled) classes.push('iu-enabled');
     if (isManual) classes.push('iu-manual');
     if (isBlocked) classes.push('iu-blocked');
 
     return html`
-      <div class=${classes.join(' ')}>
-      <div class="iu-td1"></div>
-      <div class="iu-td2"><ha-icon .icon=${stateObj.attributes.icon}></ha-icon></div>
-        <div class="iu-td3">
-          <span style="color: ${this._selectColour(zone)}">${zone + 1}</span>
-          <span class="iu-name">${stateObj.attributes.friendly_name}</span>
-        </div>
-        <div class="iu-td4">
-          <div ?hidden=${!isEnabled || isBlocked}>
-            <span class="iu-schedule">${schedule_name}</span>
-            <span class="iu-start" ?hidden=${isOn || isManual}><br>${startStr}</span>
+      <div class="iu-zone">
+        <div class=${classes.join(' ')}>
+          <div class="iu-td1"></div>
+          <div class="iu-td2">
+            <ha-icon .icon=${stateObj.attributes.icon}></ha-icon>
+          </div>
+          <div class="iu-td3">
+            <span style="color: ${this._selectColour(zone)}">${zone + 1}</span>
+            <span class="iu-name">${stateObj.attributes.friendly_name}</span>
+          </div>
+          <div class="iu-td4">
+            <div ?hidden=${!isEnabled || isBlocked}>
+              <span class="iu-schedule">${schedule_name}</span>
+              <span class="iu-start" ?hidden=${isOn || isManual}><br>${startStr}</span>
+            </div>
+          </div>
+          <div class="iu-td5 iu-duration">
+            <div ?hidden=${!isEnabled || isBlocked}>${duration}</div>
+          </div>
+          <div class="iu-td6 iu-adjustment">
+            <div ?hidden=${isManual}>${adjustment}</div>
+          </div>
+          <div class="iu-td7">
+            <ha-switch
+              .checked=${isEnabled}
+              .disabled=${isBlocked}
+              iukey="${controller + 1}.${zone + 1}.0.0"
+              @change="${this._toggleEnable}"
+            ></ha-switch>
           </div>
         </div>
-        <div class="iu-td5 iu-duration">
-          <div ?hidden=${!isEnabled || isBlocked}>${duration}</div>
-        </div>
-        <div class="iu-td6 iu-adjustment">
-          <div ?hidden=${isManual}>${adjustment}</div>
-        </div>
-        <div class="iu-td7">
-          <ha-switch
-            .checked=${isEnabled}
-            .disabled=${isBlocked}
-            iukey="${controller + 1}.${zone + 1}.0.0"
-            @change="${this._toggleEnable}"
-          ></ha-switch>
-        </div>
-      </div>`;
+      </div>
+    `;
   }
 
   private _renderSequence(controller: number, sequence: any): TemplateResult {
     const isOn = (sequence.status === 'on');
     const isEnabled = (sequence.enabled);
     const isBlocked = (sequence.status === 'blocked')
-    const isManual = (sequence.schedule.index === null);
+    const isManual = (sequence.enabled && sequence.schedule.index === null);
     const isRunning = (sequence.duration !== 0)
     const start = new Date(sequence.start)
     let startStr = ''
@@ -258,7 +273,7 @@ export class IrrigationUnlimitedCard extends LitElement {
       startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
     }
     const duration = new Date(sequence.duration * 1000).toISOString().substring(12, 19)
-    const classes: Array<string> = ['iu-td'];
+    const classes: Array<string> = ['iu-sequence-row iu-td'];
     if (isOn) classes.push('iu-on');
     if (isEnabled) classes.push('iu-enabled');
     if (isManual) classes.push('iu-manual');
@@ -266,37 +281,41 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isBlocked) classes.push('iu-blocked');
 
     return html`
-      <div class="iu-collapsible iu-hidden">
-        <div class=${classes.join(' ')}>
-          <div class="iu-td1 iu-expander" @click="${this._toggleCollapse}"></div>
-          <div class="iu-td2"><ha-icon .icon=${sequence.icon} ?is-on=${isOn}></ha-icon></div>
-          <div class="iu-td3">
-            <span>${sequence.index + 1}</span>
-            <span class="iu-name">${sequence.name}</span>
-          </div>
-          <div class="iu-td4">
-            <div ?hidden=${!isEnabled || isBlocked || !isRunning}>
-              <span class="iu-schedule">${sequence.schedule.name}</span>
-              <span class="iu-start" ?hidden=${isOn}><br>${startStr}</span>
+      <div class="iu-sequence">
+        <div class="iu-collapsible iu-hidden">
+          <div class=${classes.join(' ')}>
+            <div class="iu-td1 iu-expander" @click="${this._toggleCollapse}"></div>
+            <div class="iu-td2" @click="${this._toggleCollapse}">
+              <ha-icon .icon=${sequence.icon} ?is-on=${isOn}></ha-icon>
+            </div>
+            <div class="iu-td3" @click="${this._toggleCollapse}">
+              <span>${sequence.index + 1}</span>
+              <span class="iu-name">${sequence.name}</span>
+            </div>
+            <div class="iu-td4">
+              <div ?hidden=${!isEnabled || isBlocked || !isRunning}>
+                <span class="iu-schedule">${sequence.schedule.name}</span>
+                <span class="iu-start" ?hidden=${isOn}><br>${startStr}</span>
+              </div>
+            </div>
+            <div class="iu-td5 iu-duration">
+              <div ?hidden=${!isEnabled || isBlocked || !isRunning}>${duration}</div>
+            </div>
+            <div class="iu-td6 iu-adjustment">
+            <div ?hidden=${isManual}>${sequence.adjustment}</div>
+            </div>
+            <div class="iu-td7">
+              <ha-switch
+                .checked=${isEnabled}
+                .disabled=${isBlocked}
+                iukey="${controller + 1}.0.${sequence.index + 1}.0"
+                @change="${this._toggleEnable}"
+              ></ha-switch>
             </div>
           </div>
-          <div class="iu-td5 iu-duration">
-            <div ?hidden=${!isEnabled || isBlocked || !isRunning}>${duration}</div>
+          <div class="iu-sequence-zones iu-content">
+            ${sequence.zones.map((sequenceZone: any) => this._renderSequenceZone(controller, sequence.index, sequenceZone, isManual))}
           </div>
-          <div class="iu-td6 iu-adjustment">
-          <div ?hidden=${isManual}>${sequence.adjustment}</div>
-          </div>
-          <div class="iu-td7">
-            <ha-switch
-              .checked=${isEnabled}
-              .disabled=${isBlocked}
-              iukey="${controller + 1}.0.${sequence.index + 1}.0"
-              @change="${this._toggleEnable}"
-            ></ha-switch>
-          </div>
-        </div>
-        <div class="iu-content">
-          ${sequence.zones.map((sequenceZone: any) => this._renderSequenceZone(controller, sequence.index, sequenceZone, isManual))}
         </div>
       </div>
     `;
@@ -308,7 +327,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const isBlocked = (sequenceZone.status === 'blocked')
     const isRunning = (sequenceZone.duration !== 0)
     const duration = new Date(sequenceZone.duration * 1000).toISOString().substring(12, 19)
-    const classes: Array<string> = ['iu-td'];
+    const classes: Array<string> = ['iu-sequence-zone-row iu-td'];
     if (isOn) classes.push('iu-on');
     if (isEnabled) classes.push('iu-enabled');
     if (isManual) classes.push('iu-manual');
@@ -316,26 +335,30 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isBlocked) classes.push('iu-blocked');
 
     return html`
-      <div class=${classes.join(' ')}>
-        <div class="iu-td1"></div>
-        <div class="iu-td2"><ha-icon .icon=${sequenceZone.icon} ?is-on=${isOn}></ha-icon></div>
-        <div class="iu-td3">
-          <span>${sequenceZone.zone_ids.map((zoneRef: number) => this._renderSequenceZoneRef(zoneRef))}</span>
-        </div>
-        <div class="iu-td4"></div>
-        <div class="iu-td5 iu-duration">
-          <div ?hidden=${!isEnabled || isBlocked || !isRunning}>${duration}</div>
-        </div>
-        <div class="iu-td6 iu-adjustment">
-          <div ?hidden=${isManual}>${sequenceZone.adjustment}</div>
-        </div>
-        <div class="iu-td7">
-          <ha-switch
-            .checked=${sequenceZone.enabled}
-            .disabled=${sequenceZone.status === 'blocked'}
-            iukey="${controller + 1}.0.${sequence + 1}.${sequenceZone.index + 1}"
-            @change="${this._toggleEnable}"
-          ></ha-switch>
+      <div class="iu-sequence-zone">
+        <div class=${classes.join(' ')}>
+          <div class="iu-td1"></div>
+          <div class="iu-td2">
+            <ha-icon .icon=${sequenceZone.icon} ?is-on=${isOn}></ha-icon>
+          </div>
+          <div class="iu-td3">
+            <span>${sequenceZone.zone_ids.map((zoneRef: number) => this._renderSequenceZoneRef(zoneRef))}</span>
+          </div>
+          <div class="iu-td4"></div>
+          <div class="iu-td5 iu-duration">
+            <div ?hidden=${!isEnabled || isBlocked || !isRunning}>${duration}</div>
+          </div>
+          <div class="iu-td6 iu-adjustment">
+            <div ?hidden=${isManual}>${sequenceZone.adjustment}</div>
+          </div>
+          <div class="iu-td7">
+            <ha-switch
+              .checked=${sequenceZone.enabled}
+              .disabled=${sequenceZone.status === 'blocked'}
+              iukey="${controller + 1}.0.${sequence + 1}.${sequenceZone.index + 1}"
+              @change="${this._toggleEnable}"
+            ></ha-switch>
+          </div>
         </div>
       </div>
     `;
@@ -412,56 +435,77 @@ export class IrrigationUnlimitedCard extends LitElement {
 
       .iu-hidden .iu-expander::before {
         content: '\u25B6';
+        font-size: large;
       }
 
       .iu-expander::before {
         content: '\u25BC';
+        font-size: large;
+      }
+
+      .iu-controller-row.iu-td {
+        display: flex;
+        align-items: center;
+        min-height: 3em;
+      }
+
+      .iu-zone-row.iu-td {
+        display: flex;
+        align-items: center;
+        min-height: 3em;
+      }
+
+      .iu-sequence-row.iu-td {
+        display: flex;
+        align-items: center;
+        min-height: 3em;
+      }
+
+      .iu-sequence-zone-row.iu-td {
+        display: flex;
+        align-items: center;
+        height: 2em;
       }
 
       .iu-td {
         display: flex;
+        align-items: center;
       }
 
       .iu-td1 {
-        flex: 20px;
+        flex: 1.5em;
         text-align: center;
-        align-self: center;
+        cursor: pointer;
       }
 
       .iu-td2 {
         flex: 30px;
         text-align: center;
-        align-self: center;
       }
 
       .iu-td3 {
         flex: 40%;
         text-align: left;
-        align-self: center;
       }
 
       .iu-td4 {
         flex: 20%;
         text-align: center;
-        align-self: center;
       }
 
       .iu-td5 {
         flex: 15%;
         text-align: center;
-        align-self: center;
       }
 
       .iu-td6 {
         flex: 15%;
         text-align: center;
-        align-self: center;
       }
 
       .iu-td7 {
         flex: 10%;
         text-align: center;
-        align-self: center;
       }
 
       .iu-on .iu-duration {
@@ -487,12 +531,10 @@ export class IrrigationUnlimitedCard extends LitElement {
 
       ha-icon {
         color: var(--state-icon-color, #44739e);
-        line-height: 40px;
       }
 
       .iu-on ha-icon {
         color: var(--state-icon-active-color, #FDD835);
-        line-height: 40px;
       }
 
     }`;
