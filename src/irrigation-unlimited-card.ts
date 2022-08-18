@@ -28,14 +28,15 @@ console.info(
   description: 'A companion card for the Irrigation Unlimited integration',
 });
 
+type IUEntity = { entity_id: string; last_updated: Date };
+
 @customElement('irrigation-unlimited-card')
 export class IrrigationUnlimitedCard extends LitElement {
 
   @property({ attribute: false }) public hass!: HomeAssistant;
   @state() private config!: IrrigationUnlimitedCardConfig;
 
-  private _entities: Array<string> | undefined = undefined;
-  private _last_update: Date | undefined = undefined;
+  private _iu_entities: IUEntity[] | undefined = undefined;
 
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     return document.createElement('irrigation-unlimited-card-editor');
@@ -62,29 +63,25 @@ export class IrrigationUnlimitedCard extends LitElement {
     }
 
     // Init entity list or check
-    if (this._entities == undefined) {
-      this._entities = [];
+    if (this._iu_entities == undefined) {
+      this._iu_entities = [];
       for (const entity_id in this.hass.states) {
         if (entity_id.startsWith("binary_sensor.irrigation_unlimited_")) {
-          this._entities.push(entity_id);
           const date: Date = new Date(this.hass.states[entity_id].last_updated);
-          if (this._last_update == undefined || date > this._last_update) {
-            this._last_update = date;
-          }
-          // Build display status
-          if (entity_id.endsWith("_m")) {
-          }
+          this._iu_entities.push({ entity_id: entity_id, last_updated: date });
         }
       }
       return true;
     } else {
-      for (const entity_id of this._entities) {
-        const date = new Date(this.hass.states[entity_id].last_updated);
-        if (this._last_update == undefined || date > this._last_update) {
-          this._last_update = date;
-          return true;
+      let result = false;
+      for (const iu_entity of this._iu_entities) {
+        const date = new Date(this.hass.states[iu_entity.entity_id].last_updated);
+        if (date > (iu_entity.last_updated)) {
+          iu_entity.last_updated = date;
+          result = true;
         }
       }
+      return result;
     }
     return hasConfigOrEntityChanged(this, changedProps, false);
   }
