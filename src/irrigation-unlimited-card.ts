@@ -52,6 +52,10 @@ export class IrrigationUnlimitedCard extends LitElement {
     return {};
   }
 
+  public getCardSize() {
+    return 1;
+  }
+
   protected shouldUpdate(changedProps: PropertyValues): boolean {
     if (!this.hass) {
       return false;
