@@ -95,6 +95,8 @@ export class IrrigationUnlimitedCard extends LitElement {
       <ha-card
         .header=${this.config.name}
         tabindex="0"
+        id="iu-card"
+        @click="${this._clickNet}"
       >
         <div class="iu-header-row iu-td">
           <div class="iu-td1"></div>
@@ -138,7 +140,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isEnabled) classes.push('iu-enabled')
 
     return html`
-      <div class="iu-controller">
+      <div class="iu-controller iu-object" iu-key="${controller + 1}.0.0.0">
       <hr>
         <div class=${classes.join(' ')}>
           <div class="iu-td1"></div>
@@ -161,13 +163,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div class="iu-td6"></div>
-          <div class="iu-td7">
-            <ha-switch
-              .checked=${isEnabled}
-              iukey="${controller + 1}.0.0.0"
-              @change="${this._toggleEnable}"
-            ></ha-switch>
-          </div>
+          <div class="iu-td7">${this._renderMenu(isEnabled, false, true, true, null)}</div>
         </div>
         <div class="iu-control-panel">
           <div class="iu-control-panel-item">
@@ -227,7 +223,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isBlocked) classes.push('iu-blocked');
 
     return html`
-      <div class="iu-zone">
+      <div class="iu-zone iu-object" iu-key="${controller + 1}.${zone + 1}.0.0">
         <div class=${classes.join(' ')}>
           <div class="iu-td1"></div>
           <div class="iu-td2">
@@ -249,21 +245,14 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-td6 iu-adjustment">
             <div ?hidden=${isManual}>${adjustment}</div>
           </div>
-          <div class="iu-td7">
-            <ha-switch
-              .checked=${isEnabled}
-              .disabled=${isBlocked}
-              iukey="${controller + 1}.${zone + 1}.0.0"
-              @change="${this._toggleEnable}"
-            ></ha-switch>
-          </div>
+          <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, true, adjustment)}</div>
         </div>
       </div>
     `;
   }
 
   private _renderSequence(controller: number, sequence: any): TemplateResult {
-    const isOn = (sequence.status === 'on');
+    const isOn = (sequence.status === 'on' || sequence.status === 'paused');
     const isEnabled = (sequence.enabled);
     const isBlocked = (sequence.status === 'blocked')
     const isManual = (sequence.enabled && sequence.schedule.index === null);
@@ -282,7 +271,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isBlocked) classes.push('iu-blocked');
 
     return html`
-      <div class="iu-sequence">
+      <div class="iu-sequence iu-object" iu-key="${controller + 1}.0.${sequence.index + 1}.0">
         <div class="iu-collapsible iu-hidden">
           <div class=${classes.join(' ')}>
             <div class="iu-td1 iu-expander" @click="${this._toggleCollapse}"></div>
@@ -305,14 +294,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             <div class="iu-td6 iu-adjustment">
             <div ?hidden=${isManual}>${sequence.adjustment}</div>
             </div>
-            <div class="iu-td7">
-              <ha-switch
-                .checked=${isEnabled}
-                .disabled=${isBlocked}
-                iukey="${controller + 1}.0.${sequence.index + 1}.0"
-                @change="${this._toggleEnable}"
-              ></ha-switch>
-            </div>
+            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, false, sequence.adjustment)}</div>
           </div>
           <div class="iu-sequence-zones iu-content">
             ${sequence.zones.map((sequenceZone: any) => this._renderSequenceZone(controller, sequence.index, sequenceZone, isManual))}
@@ -336,7 +318,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isBlocked) classes.push('iu-blocked');
 
     return html`
-      <div class="iu-sequence-zone">
+      <div class="iu-sequence-zone iu-object" iu-key="${controller + 1}.0.${sequence + 1}.${sequenceZone.index + 1}">
         <div class=${classes.join(' ')}>
           <div class="iu-td1"></div>
           <div class="iu-td2">
@@ -352,14 +334,7 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-td6 iu-adjustment">
             <div ?hidden=${isManual}>${sequenceZone.adjustment}</div>
           </div>
-          <div class="iu-td7">
-            <ha-switch
-              .checked=${sequenceZone.enabled}
-              .disabled=${sequenceZone.status === 'blocked'}
-              iukey="${controller + 1}.0.${sequence + 1}.${sequenceZone.index + 1}"
-              @change="${this._toggleEnable}"
-            ></ha-switch>
-          </div>
+          <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, false, false, sequenceZone.adjustment)}</div>
         </div>
       </div>
     `;
@@ -371,9 +346,88 @@ export class IrrigationUnlimitedCard extends LitElement {
     `;
   }
 
+  private _renderMenu(isEnabled: boolean, isBlocked: boolean, allowManual: boolean, allowCancel: boolean, adjustment: string | null | undefined): TemplateResult {
+    return html`
+      <div class="iu-menu">
+        <ha-icon class="iu-menu-button" icon="mdi:dots-vertical" @click="${this._toggleMenu}"></ha-icon>
+        <div class="iu-menu-content iu-hidden">
+          <div class="iu-menu-item">
+            <div class="iu-mc1">Enable</div>
+            <div class="iu-mc2"></div>
+            <div class="iu-mc3">${this._renderEnabled(isEnabled, isBlocked)}</div>
+          </div>
+          <div class="iu-menu-item ${(!allowManual) ? 'iu-hidden' : ''}">
+            <div class="iu-mc1">Manual</div>
+            <div class="iu-mc2">
+              <input type="text"
+                class="iu-time-input"
+                placeholder="0:00:00"
+                title="Duration"
+                size="8"
+                maxlength="8"
+                required
+                pattern="^[0-9]{1,2}:[0-9]{2}:[0-9]{2}$">
+              </input>
+            </div>
+            <div class="iu-mc3">
+              <ha-icon-button icon="mdi:play" @click="${this._serviceManualRun}">
+                <ha-icon icon="mdi:play"></ha-icon>
+              </ha-icon-button>
+            </div>
+          </div>
+          <div class="iu-menu-item ${(!allowCancel) ? 'iu-hidden' : ''}">
+            <div class="iu-mc1">Cancel</div>
+            <div class="iu-mc2"></div>
+            <div class="iu-mc3">
+              <ha-icon-button .disabled=${!allowCancel} @click="${this._serviceCancel}">
+                <ha-icon icon="mdi:cancel"></ha-icon>
+              </ha-icon-button>
+            </div>
+          </div>
+          <div class="iu-menu-item ${(adjustment === undefined) ? 'iu-hidden' : ''}">
+            <div class="iu-mc1">Adjust</div>
+            <div class="iu-mc2">
+              <input type="text"
+                class="iu-adjust-input"
+                value=${adjustment}
+                title="Adjustment options\n===============\nPercentage: %n\nActual: =0:00:00\nIncrease: +0:00:00\nDecrease: -0:00:00\nReset: <blank>"
+                size="9"
+                maxlength="9"
+                pattern="^$|^[=+-][0-9]{1,2}:[0-9]{2}:[0-9]{2}$|^%[0-9]*\.?[0-9]+$">
+              </input>
+            </div>
+            <div class="iu-mc3">
+              <ha-icon-button icon="mdi:adjust" @click="${this._serviceAdjust}">
+                <ha-icon icon="mdi:adjust"></ha-icon>
+              </ha-icon-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private _renderEnabled(isEnabled: Boolean, isBlocked: boolean): TemplateResult {
+    return html`
+      <ha-switch
+        .checked=${isEnabled}
+        .disabled=${isBlocked}
+        @change="${this._serviceEnable}"
+      ></ha-switch>
+    `;
+  }
+
   private _selectColour(index: number): string {
     const palette: string[] = ['#3498db', '#e74c3c', '#9b59b6', '#f1c40f', '#2ecc71', '#1abc9c', '#34495e', '#e67e22', '#7f8c8d', '#27ae60', '#2980b9', '#8e44ad'];
     return palette[index % palette.length]
+  }
+
+  private _clickNet(e: Event): void {
+    const target = e.target as Element;
+    if (target.closest('.iu-menu')) return;
+
+    const menus = target.closest('#iu-card')?.querySelectorAll('.iu-menu-content:not(.iu-hidden)');
+    menus?.forEach(p => p.classList.add('iu-hidden'))
   }
 
   private _toggleCollapse(e: Event): void {
@@ -390,13 +444,25 @@ export class IrrigationUnlimitedCard extends LitElement {
     (e.target as Element).closest('.iu-controller')?.querySelector('.iu-sequences')?.classList.toggle('iu-hidden')
   }
 
-  private _toggleEnable(e: Event): void {
-    const keys = (e.target as Element).getAttribute('iukey')?.split(".", 4);
-    if (!keys) return;
+  private _toggleMenu(e: Event): void {
+    (e.target as Element).closest('.iu-menu')?.querySelector('.iu-menu-content')?.classList.toggle('iu-hidden')
+  }
 
+  private _get_iu_key(e: Event): string[] | undefined {
+    return (e.target as Element).closest('.iu-object')?.getAttribute('iu-key')?.split(".", 4);
+  }
+
+  private _build_entity_id(keys: string[]): string {
     let entity_id = 'binary_sensor.irrigation_unlimited_c' + keys[0] + '_';
     entity_id += (keys[1] === '0') ? 'm' : 'z' + keys[1];
+    return entity_id
+  }
 
+  private _build_data(e: Event): { [key: string]: string | Number | null; } | undefined {
+    const keys = this._get_iu_key(e);
+    if (!keys) return;
+
+    const entity_id = this._build_entity_id(keys);
     const data = {
       entity_id: entity_id
     }
@@ -406,8 +472,56 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (keys[3] !== '0') {
       data['zones'] = Number(keys[3])
     }
+    return data;
+  }
+
+  private _serviceEnable(e: Event): void {
+    const data = this._build_data(e);
+    if (!data) return;
+
     this.hass.callService('irrigation_unlimited', 'toggle', data);
     return;
+  }
+
+  private _serviceManualRun(e: Event): void {
+    const data = this._build_data(e);
+    if (!data) return;
+
+    const timeElement = (e.target as Element).closest('.iu-menu-item')?.querySelector('.iu-time-input') as HTMLInputElement;
+    data['time'] = timeElement.value;
+
+    this.hass.callService('irrigation_unlimited', 'manual_run', data);
+    this._toggleMenu(e);
+    return;
+  }
+
+  private _serviceCancel(e: Event): void {
+    const data = this._build_data(e);
+    if (!data) return;
+
+    this.hass.callService('irrigation_unlimited', 'cancel', data);
+    this._toggleMenu(e);
+  }
+
+  private _serviceAdjust(e: Event): void {
+    const data = this._build_data(e);
+    if (!data) return;
+
+    const adjustElement = (e.target as Element).closest('.iu-menu-item')?.querySelector('.iu-adjust-input') as HTMLInputElement;
+    const value = adjustElement.value;
+
+    switch (value.slice(0, 1)) {
+      case '%': { data['percentage'] = value.slice(1); break; }
+      case '=': { data['actual'] = value.slice(1); break; }
+      case '+': { data['increase'] = value.slice(1); break; }
+      case '-': { data['decrease'] = value.slice(1); break; }
+      case '': { data['reset'] = null; break; }
+      default: return;
+    }
+
+    console.log(data);
+    this.hass.callService('irrigation_unlimited', 'adjust_time', data);
+    this._toggleMenu(e);
   }
 
   static get styles(): CSSResultGroup {
@@ -534,10 +648,80 @@ export class IrrigationUnlimitedCard extends LitElement {
         color: var(--state-icon-color, #44739e);
       }
 
-      .iu-on ha-icon {
+      .iu-on .iu-td2 ha-icon {
         color: var(--state-icon-active-color, #FDD835);
       }
 
+      .iu-menu {
+        position: relative;
+        display: inline-block;
+      }
+
+      .iu-menu-button {
+        background-color: transparent;
+        text-align: center;
+        display: block;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .iu-menu-content {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        width: 200px;
+        padding: 10px 0;
+        position: absolute;
+        background-color: var(--card-background-color, white);
+        right: 0;
+        box-shadow: 0px 0px 7px 0px rgba(50, 50, 50, 0.75);
+        border-radius: 5px;
+        z-index: 1;
+      }
+
+      .iu-menu-content.iu-hidden {
+        display: none;
+      }
+
+      .iu-menu-content .iu-menu-item {
+        display: flex;
+        padding: 0px 5px;
+        line-height: 48px;
+      }
+
+      .iu-menu .iu-menu-item:hover {
+        color: var(--primary-color, #b3e5fc);
+        background-color: var(--secondary-background-color, #e5e5e5);
+      }
+
+      .iu-menu-item.iu-hidden {
+        display: none;
+      }
+
+      .iu-mc1 {
+        flex: 30%;
+        text-align: left;
+      }
+
+      .iu-mc2 {
+        flex: 40%;
+        text-align: right;
+      }
+
+      .iu-mc3 {
+        flex: 30%;
+        text-align: center;
+      }
+
+      .iu-mc3 ha-icon {
+        display: flex;
+      }
+
+      .iu-adjust-input:invalid,
+      .iu-time-input:invalid {
+        color: var(--label-badge-red, #DF4C1E);
+      }
     }`;
   }
 }
