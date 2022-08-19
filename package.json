@@ -1,6 +1,6 @@
 {
   "name": "irrigation-unlimited-card",
-  "version": "1.0.",
+  "version": "1.0.2",
   "description": "Irrigation Unlimited card",
   "keywords": [
     "home-assistant",
@@ -35,7 +35,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.4.1",
     "rollup": "^2.58.0",
-    "@rollup/plugin-babel": "^5.3.1",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-serve": "^1.1.0",
