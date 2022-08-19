@@ -42,7 +42,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     return document.createElement('irrigation-unlimited-card-editor');
   }
 
-  setConfig(config: IrrigationUnlimitedCardConfig): void {
+  public setConfig(config: IrrigationUnlimitedCardConfig): void {
     if (!config) {
       throw new Error(localize('common.invalid_configuration'));
     }
