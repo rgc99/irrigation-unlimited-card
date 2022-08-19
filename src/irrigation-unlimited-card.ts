@@ -53,7 +53,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     return {};
   }
 
-  public getCardSize() {
+  public getCardSize(): number {
     return 1;
   }
 
@@ -407,7 +407,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     `;
   }
 
-  private _renderEnabled(isEnabled: Boolean, isBlocked: boolean): TemplateResult {
+  private _renderEnabled(isEnabled: boolean, isBlocked: boolean): TemplateResult {
     return html`
       <ha-switch
         .checked=${isEnabled}
@@ -458,7 +458,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     return entity_id
   }
 
-  private _build_data(e: Event): { [key: string]: string | Number | null; } | undefined {
+  private _build_data(e: Event): { [key: string]: string | number | null; } | undefined {
     const keys = this._get_iu_key(e);
     if (!keys) return;
 
