@@ -221,31 +221,58 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isEnabled) classes.push('iu-enabled');
     if (isManual) classes.push('iu-manual');
     if (isBlocked) classes.push('iu-blocked');
-
+    let timeline = stateObj.attributes.timeline;
+    if (timeline === undefined) timeline = [];
     return html`
       <div class="iu-zone iu-object" iu-key="${controller + 1}.${zone + 1}.0.0">
-        <div class=${classes.join(' ')}>
+        <div class="iu-collapsible iu-hidden">
+          <div class=${classes.join(' ')}>
+            <div class="iu-td1 iu-expander" @click="${this._toggleCollapse}"></div>
+            <div class="iu-td2" @click="${this._toggleCollapse}">
+              <ha-icon .icon=${stateObj.attributes.icon}></ha-icon>
+            </div>
+            <div class="iu-td3">
+              <span style="color: ${this._selectColour(zone)}">${zone + 1}</span>
+              <span class="iu-name">${stateObj.attributes.friendly_name}</span>
+            </div>
+            <div class="iu-td4">
+              <div ?hidden=${!isEnabled || isBlocked}>
+                <span class="iu-schedule">${schedule_name}</span>
+                <span class="iu-start" ?hidden=${isOn || isManual}><br>${startStr}</span>
+              </div>
+            </div>
+            <div class="iu-td5 iu-duration">
+              <div ?hidden=${!isEnabled || isBlocked}>${duration}</div>
+            </div>
+            <div class="iu-td6 iu-adjustment">
+              <div ?hidden=${isManual}>${adjustment}</div>
+            </div>
+            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, true, adjustment)}</div>
+          </div>
+          <div class="iu-zone-history iu-content">
+            ${timeline.filter(function (item: any) { return item.status === "history" && item.start !== item.end }).map((item: any) => this._renderZoneHistory(item))}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  private _renderZoneHistory(timeline: any): TemplateResult {
+    const start = new Date(timeline.start);
+    const duration = new Date(new Date(timeline.end).getTime() - start.getTime()).toISOString().slice(12, 19);
+    const startStr = start.toLocaleString(undefined, { weekday: 'short', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: false });
+    return html`
+      <div class="iu-zone-history iu-object">
+        <div class='iu-zone-history-row iu-td'}>
           <div class="iu-td1"></div>
           <div class="iu-td2">
-            <ha-icon .icon=${stateObj.attributes.icon}></ha-icon>
+            <ha-icon icon="mdi:history"></ha-icon>
           </div>
-          <div class="iu-td3">
-            <span style="color: ${this._selectColour(zone)}">${zone + 1}</span>
-            <span class="iu-name">${stateObj.attributes.friendly_name}</span>
-          </div>
-          <div class="iu-td4">
-            <div ?hidden=${!isEnabled || isBlocked}>
-              <span class="iu-schedule">${schedule_name}</span>
-              <span class="iu-start" ?hidden=${isOn || isManual}><br>${startStr}</span>
-            </div>
-          </div>
-          <div class="iu-td5 iu-duration">
-            <div ?hidden=${!isEnabled || isBlocked}>${duration}</div>
-          </div>
-          <div class="iu-td6 iu-adjustment">
-            <div ?hidden=${isManual}>${adjustment}</div>
-          </div>
-          <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, true, adjustment)}</div>
+          <div class="iu-td3">${startStr}</div>
+          <div class="iu-td4 iu-schedule">${timeline.schedule_name}</div>
+          <div class="iu-td5 iu-duration">${duration}</div>
+          <div class="iu-td6 iu-adjustment">${timeline.adjustment}</div>
+          <div class="iu-td7"></div>
         </div>
       </div>
     `;
