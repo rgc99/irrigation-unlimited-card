@@ -62,6 +62,10 @@ export class IrrigationUnlimitedCard extends LitElement {
       return false;
     }
 
+    if (changedProps.has('config')) {
+      return true;
+    }
+
     // Init entity list or check
     if (this._iu_entities == undefined) {
       this._iu_entities = [];
