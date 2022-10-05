@@ -357,7 +357,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             <ha-icon .icon=${sequenceZone.icon} ?is-on=${isOn}></ha-icon>
           </div>
           <div class="iu-td3">
-            <span>${sequenceZone.zone_ids.map((zoneRef: number) => this._renderSequenceZoneRef(zoneRef))}</span>
+            <span>${sequenceZone.zone_ids.map((zoneRef: number, index: number, array) => this._renderSequenceZoneRef(controller, zoneRef, index === array.length - 1))}</span>
           </div>
           <div class="iu-td4"></div>
           <div class="iu-td5 iu-duration">
@@ -372,7 +372,21 @@ export class IrrigationUnlimitedCard extends LitElement {
     `;
   }
 
-  private _renderSequenceZoneRef(zoneRef: number): TemplateResult {
+  private _renderSequenceZoneRef(controller: number, zoneRef: number, last: boolean): TemplateResult {
+    const entity_id = `binary_sensor.irrigation_unlimited_c${controller + 1}_z${zoneRef}`;
+    let name: string | undefined = undefined;
+    if (this._iu_entities !== undefined) {
+      for (const iu_entity of this._iu_entities) {
+        if (iu_entity.entity_id === entity_id) {
+          if (iu_entity.name) {
+            name = iu_entity.name;
+          };
+          break;
+        }
+      };
+    };
+    if (name)
+      return html`<span class="iu-name">${name}${last === false ? ", " : ""}</span>`;
     return html`
       <span style="color: ${this._selectColour(zoneRef - 1)}">${zoneRef}</span>
     `;
