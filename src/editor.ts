@@ -19,6 +19,18 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
     return this._config?.name || '';
   }
 
+  get _show_controllers(): string {
+    return this._config?.show_controllers || '';
+  }
+
+  get _always_show_zones(): boolean {
+    return this._config?.always_show_zones || false;
+  }
+
+  get _always_show_sequences(): boolean {
+    return this._config?.always_show_sequences || false;
+  }
+
   protected render(): TemplateResult | typeof nothing {
     if (!this.hass) {
       return nothing;
@@ -31,6 +43,26 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
         .configValue=${'name'}
         @value-changed=${this._valueChanged}
       ></paper-input>
+      <paper-input
+        label="Show controllers (CSV list)"
+        .value=${this._show_controllers}
+        .configValue=${'show_controllers'}
+        @value-changed=${this._valueChanged}
+      ></paper-input>
+      <ha-formfield label="Always show zones">
+        <ha-switch
+          .checked=${this._always_show_zones}
+          .configValue=${'always_show_zones'}
+          @change=${this._valueChanged}
+        </ha-switch>
+      </ha-formfield>
+      <ha-formfield label="Always show sequences">
+        <ha-switch
+          .checked=${this._always_show_sequences}
+          .configValue=${'always_show_sequences'}
+          @change=${this._valueChanged}
+        </ha-switch>
+      </ha-formfield>
     `;
   }
 
