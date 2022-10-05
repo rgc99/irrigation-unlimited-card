@@ -28,7 +28,7 @@ console.info(
   description: 'A companion card for the Irrigation Unlimited integration',
 });
 
-type IUEntity = { entity_id: string; last_updated: Date };
+type IUEntity = { entity_id: string; last_updated: Date; name: string | undefined };
 
 @customElement('irrigation-unlimited-card')
 export class IrrigationUnlimitedCard extends LitElement {
@@ -67,8 +67,9 @@ export class IrrigationUnlimitedCard extends LitElement {
       this._iu_entities = [];
       for (const entity_id in this.hass.states) {
         if (entity_id.startsWith("binary_sensor.irrigation_unlimited_")) {
-          const date: Date = new Date(this.hass.states[entity_id].last_updated);
-          this._iu_entities.push({ entity_id: entity_id, last_updated: date });
+          const entity = this.hass.states[entity_id]
+          const date: Date = new Date(entity.last_updated);
+          this._iu_entities.push({ entity_id: entity_id, last_updated: date, name: entity.attributes.friendly_name });
         }
       }
       return true;
