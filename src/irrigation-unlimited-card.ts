@@ -123,6 +123,8 @@ export class IrrigationUnlimitedCard extends LitElement {
     const stateObj = this.hass.states['binary_sensor.irrigation_unlimited_c' + (controller + 1) + '_m'];
     const isOn = (stateObj.state === 'on');
     const isEnabled = (stateObj.attributes.enabled);
+    const isHidden = !(!this.config.show_controllers || (this.config.show_controllers && this.config.show_controllers?.replace(/\s/g, "").split(",").includes((controller + 1) + "")));
+    const zonesHidden = !this.config.always_show_zones;
     let start: Date;
     let duration: string;
     let schedule_name: string;
@@ -140,14 +142,16 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (!isNaN(start.getTime())) {
       startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
     }
-    const classes: Array<string> = ['iu-controller-row iu-td'];
-    if (isOn) classes.push('iu-on')
-    if (isEnabled) classes.push('iu-enabled')
+
+    const controllerClasses: Array<string> = ['iu-controller iu-object'];
+    controllerClasses.push(`iu-key=${controller + 1}.0.0.0`);
+    if (isHidden) controllerClasses.push('iu-hidden');
+
 
     return html`
-      <div class="iu-controller iu-object" iu-key="${controller + 1}.0.0.0">
+      <div class=${controllerClasses.join(' ')}>
       <hr>
-        <div class=${classes.join(' ')}>
+        <div class=${rowClasses.join(' ')}>
           <div class="iu-td1"></div>
           <div class="iu-td2">
             <ha-icon .icon=${stateObj.attributes.icon}></ha-icon>
@@ -572,6 +576,10 @@ export class IrrigationUnlimitedCard extends LitElement {
 
   static get styles(): CSSResultGroup {
     return css`
+      .iu-controller.iu-hidden {
+        display: none;
+      }
+
       .iu-control-panel {
         display: flex;
         justify-content: flex-start;
