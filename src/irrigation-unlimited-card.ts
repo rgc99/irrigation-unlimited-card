@@ -403,11 +403,11 @@ export class IrrigationUnlimitedCard extends LitElement {
         if (iu_entity.entity_id === entity_id) {
           if (iu_entity.name) {
             name = iu_entity.name;
-          };
+          }
           break;
         }
-      };
-    };
+      }
+    }
     if (name)
       return html`<span class="iu-name">${name}${last === false ? ", " : ""}</span>`;
     return html`
