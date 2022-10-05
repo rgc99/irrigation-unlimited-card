@@ -125,6 +125,8 @@ export class IrrigationUnlimitedCard extends LitElement {
     const isEnabled = (stateObj.attributes.enabled);
     const isHidden = !(!this.config.show_controllers || (this.config.show_controllers && this.config.show_controllers?.replace(/\s/g, "").split(",").includes((controller + 1) + "")));
     const zonesHidden = !this.config.always_show_zones;
+    const sequencesHidden = !this.config.always_show_sequences;
+
     let start: Date;
     let duration: string;
     let schedule_name: string;
@@ -147,6 +149,15 @@ export class IrrigationUnlimitedCard extends LitElement {
     controllerClasses.push(`iu-key=${controller + 1}.0.0.0`);
     if (isHidden) controllerClasses.push('iu-hidden');
 
+    const rowClasses: Array<string> = ['iu-controller-row iu-td'];
+    if (isOn) rowClasses.push('iu-on');
+    if (isEnabled) rowClasses.push('iu-enabled');
+
+    const zonesClasses: Array<string> = ['iu-zones iu-content'];
+    if (zonesHidden) zonesClasses.push('iu-hidden');
+
+    const sequencesClasses: Array<string> = ['iu-sequences iu-content'];
+    if (sequencesHidden) sequencesClasses.push('iu-hidden');
 
     return html`
       <div class=${controllerClasses.join(' ')}>
@@ -177,18 +188,26 @@ export class IrrigationUnlimitedCard extends LitElement {
         <div class="iu-control-panel">
           <div class="iu-control-panel-item">
             <label>Zones&nbsp;</label>
-            <ha-switch @change="${this._toggleZones}"></ha-switch>
+            <ha-switch
+              .checked="${!zonesHidden}"
+              .disabled="${this.config.always_show_zones}"
+              @change="${this._toggleZones}">
+            </ha-switch>
           </div>
           <div class="iu-control-panel-item">
             <label>Sequences&nbsp;</label>
-            <ha-switch @change="${this._toggleSequences}"></ha-switch>
+            <ha-switch
+            .checked="${!sequencesHidden}"
+            .disabled="${this.config.always_show_sequences}"
+            @change="${this._toggleSequences}">
+            </ha-switch>
           </div>
         </div>
-        <div class="iu-zones iu-content iu-hidden">
+        <div class=${zonesClasses.join(' ')}>
           <hr>
           ${Array.from(Array(stateObj.attributes.zone_count).keys()).map((zone: number) => this._renderZone(controller, zone))}
         </div>
-        <div class="iu-sequences iu-content iu-hidden">
+        <div class=${sequencesClasses.join(' ')}>
           <hr>
           ${stateObj.attributes.sequence_status.map((sequence: number) => this._renderSequence(controller, sequence))}
         </div>
