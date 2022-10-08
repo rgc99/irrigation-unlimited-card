@@ -17,10 +17,13 @@ A companion card for he Irrigation Unlimited integration
 
 ## Options
 
-| Name              | Type    | Requirement  | Description                                 | Default                |
-| ----------------- | ------- | ------------ | ------------------------------------------- | -----------------------|
-| type              | string  | **Required** | `custom:irrigation-unlimited-card`          |                        |
-| name              | string  | **Optional** | Card name                                   | `Irrigation Unlimited` |
+| Name                  | Type    | Requirement  | Description                                 | Default                |
+| --------------------- | ------- | ------------ | ------------------------------------------- | -----------------------|
+| type                  | string  | **Required** | `custom:irrigation-unlimited-card`          |                        |
+| name                  | string  | **Optional** | Card name                                   | `Irrigation Unlimited` |
+| controllers           | string  | **Optional** | CSV list of controllers to display          |                        |
+| always_show_zones     | boolean | **Optional** | Force the zones to always be displayed      | false                  |
+| always_show_sequences | boolean | **Optional** | Force the sequences to always be displayed  | false                  |
 
 [buymecoffee]: https://www.buymeacoffee.com/rgc99
 [buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
