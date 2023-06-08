@@ -557,7 +557,8 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (!data) return;
 
     const timeElement = (e.target as Element).closest('.iu-menu-item')?.querySelector('.iu-time-input') as HTMLInputElement;
-    data['time'] = timeElement.value;
+    if (timeElement.value)
+      data['time'] = timeElement.value;
 
     this.hass.callService('irrigation_unlimited', 'manual_run', data);
     this._toggleMenu(e);
