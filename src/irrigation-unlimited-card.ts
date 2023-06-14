@@ -146,7 +146,6 @@ export class IrrigationUnlimitedCard extends LitElement {
     }
 
     const controllerClasses: Array<string> = ['iu-controller iu-object'];
-    controllerClasses.push(`iu-key=${controller + 1}.0.0.0`);
     if (isHidden) controllerClasses.push('iu-hidden');
 
     const rowClasses: Array<string> = ['iu-controller-row iu-td'];
@@ -160,7 +159,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (sequencesHidden) sequencesClasses.push('iu-hidden');
 
     return html`
-      <div class=${controllerClasses.join(' ')}>
+      <div class=${controllerClasses.join(' ')} iu-key="${controller + 1}.0.0.0">
       <hr>
         <div class=${rowClasses.join(' ')}>
           <div class="iu-td1"></div>
