@@ -123,6 +123,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const stateObj = this.hass.states['binary_sensor.irrigation_unlimited_c' + (controller + 1) + '_m'];
     const isOn = (stateObj.state === 'on');
     const isEnabled = (stateObj.attributes.enabled);
+    const suspended = (stateObj.attributes.suspended);
     const isHidden = !(!this.config.show_controllers || (this.config.show_controllers && this.config.show_controllers?.replace(/\s/g, "").split(",").includes((controller + 1) + "")));
     const zonesHidden = !this.config.always_show_zones;
     const sequencesHidden = !this.config.always_show_sequences;
@@ -136,6 +137,10 @@ export class IrrigationUnlimitedCard extends LitElement {
       start = new Date(stateObj.attributes.current_start);
       duration = stateObj.attributes.time_remaining;
       schedule_name = stateObj.attributes.current_name;
+    } else if (suspended) {
+      start = new Date(suspended);
+      duration = '';
+      schedule_name = '';
     } else {
       start = new Date(stateObj.attributes.next_start);
       duration = stateObj.attributes.next_duration;
@@ -151,6 +156,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const rowClasses: Array<string> = ['iu-controller-row iu-td'];
     if (isOn) rowClasses.push('iu-on');
     if (isEnabled) rowClasses.push('iu-enabled');
+    if (suspended) rowClasses.push('iu-suspended');
 
     const zonesClasses: Array<string> = ['iu-zones iu-content'];
     if (zonesHidden) zonesClasses.push('iu-hidden');
@@ -173,7 +179,8 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-td4">
             <div ?hidden=${!isEnabled}>
               <span class="iu-schedule">${schedule_name}</span>
-              <span class="iu-start" ?hidden=${isOn}><br>${startStr}</span>
+              <br ?hidden=${isOn || suspended}>
+              <span class="iu-start" ?hidden=${isOn}>${startStr}</span>
             </div>
           </div>
           <div class="iu-td5 iu-duration">
@@ -182,7 +189,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div class="iu-td6"></div>
-          <div class="iu-td7">${this._renderMenu(isEnabled, false, true, true, null)}</div>
+          <div class="iu-td7">${this._renderMenu(isEnabled, false, true, true, null, suspended)}</div>
         </div>
         <div class="iu-control-panel">
           <div class="iu-control-panel-item">
@@ -218,6 +225,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const stateObj = this.hass.states['binary_sensor.irrigation_unlimited_c' + (controller + 1) + '_z' + (zone + 1)]
     const isOn = (stateObj.state === 'on');
     const isEnabled = (stateObj.attributes.enabled);
+    const suspended = (stateObj.attributes.suspended);
     const isBlocked = (stateObj.attributes.status === 'blocked')
     let start: Date;
     let duration: string;
@@ -232,6 +240,12 @@ export class IrrigationUnlimitedCard extends LitElement {
       schedule_index = stateObj.attributes.current_schedule;
       schedule_name = stateObj.attributes.current_name;
       adjustment = stateObj.attributes.current_adjustment;
+    } else if (suspended) {
+      start = new Date(suspended);
+      duration = '';
+      schedule_index = -1;
+      schedule_name = '';
+      adjustment = '';
     } else {
       start = new Date(stateObj.attributes.next_start);
       duration = stateObj.attributes.next_duration;
@@ -246,6 +260,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const classes: Array<string> = ['iu-zone-row iu-td'];
     if (isOn) classes.push('iu-on');
     if (isEnabled) classes.push('iu-enabled');
+    if (suspended) classes.push('iu-suspended');
     if (isManual) classes.push('iu-manual');
     if (isBlocked) classes.push('iu-blocked');
     let timeline = stateObj.attributes.timeline;
@@ -265,16 +280,17 @@ export class IrrigationUnlimitedCard extends LitElement {
             <div class="iu-td4">
               <div ?hidden=${!isEnabled || isBlocked}>
                 <span class="iu-schedule">${schedule_name}</span>
-                <span class="iu-start" ?hidden=${isOn || isManual}><br>${startStr}</span>
+                <br ?hidden=${isOn || isManual || suspended}>
+                <span class="iu-start" ?hidden=${isOn || isManual}>${startStr}</span>
               </div>
             </div>
             <div class="iu-td5 iu-duration">
-              <div ?hidden=${!isEnabled || isBlocked}>${duration}</div>
+              <div ?hidden=${!isEnabled || suspended || isBlocked}>${duration}</div>
             </div>
             <div class="iu-td6 iu-adjustment">
-              <div ?hidden=${isManual}>${adjustment}</div>
+              <div ?hidden=${!isEnabled || isBlocked || suspended || isManual}>${adjustment}</div>
             </div>
-            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, true, adjustment)}</div>
+            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, true, adjustment, suspended)}</div>
           </div>
           <div class="iu-zone-history iu-content">
             ${timeline.filter(function (item: any) { return item.status === "history" && item.start !== item.end }).map((item: any) => this._renderZoneHistory(item))}
@@ -290,7 +306,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const startStr = start.toLocaleString(undefined, { weekday: 'short', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: false });
     return html`
       <div class="iu-zone-history iu-object">
-        <div class='iu-zone-history-row iu-td'}>
+        <div class="iu-zone-history-row iu-td">
           <div class="iu-td1"></div>
           <div class="iu-td2">
             <ha-icon icon="mdi:history"></ha-icon>
@@ -308,18 +324,32 @@ export class IrrigationUnlimitedCard extends LitElement {
   private _renderSequence(controller: number, sequence: any): TemplateResult {
     const isOn = (sequence.status === 'on' || sequence.status === 'paused');
     const isEnabled = (sequence.enabled);
+    const suspended = (sequence.suspended);
     const isBlocked = (sequence.status === 'blocked')
-    const isManual = (sequence.enabled && sequence.schedule.index === null);
+    const isManual = (isEnabled && !suspended && sequence.schedule.index === null);
     const isRunning = (sequence.duration !== 0)
-    const start = new Date(sequence.start)
-    let startStr = ''
+    let start: Date;
+    let duration: string;
+    let schedule_name: string;
+    let startStr = '';
+
+    if (suspended) {
+      start = new Date(suspended);
+      duration = '';
+      schedule_name = '';
+    } else {
+      start = new Date(sequence.start);
+      duration = new Date(sequence.duration * 1000).toISOString().substring(12, 19);
+      schedule_name = sequence.schedule.name;
+    }
+
     if (!isNaN(start.getTime())) {
       startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
     }
-    const duration = new Date(sequence.duration * 1000).toISOString().substring(12, 19)
     const classes: Array<string> = ['iu-sequence-row iu-td'];
     if (isOn) classes.push('iu-on');
     if (isEnabled) classes.push('iu-enabled');
+    if (suspended) classes.push('iu-suspended')
     if (isManual) classes.push('iu-manual');
     if (isRunning) classes.push('iu-running');
     if (isBlocked) classes.push('iu-blocked');
@@ -337,18 +367,19 @@ export class IrrigationUnlimitedCard extends LitElement {
               <span class="iu-name">${sequence.name}</span>
             </div>
             <div class="iu-td4">
-              <div ?hidden=${!isEnabled || isBlocked || !isRunning}>
-                <span class="iu-schedule">${sequence.schedule.name}</span>
-                <span class="iu-start" ?hidden=${isOn}><br>${startStr}</span>
+              <div ?hidden=${!isEnabled || isBlocked}>
+                <span class="iu-schedule">${schedule_name}</span>
+                <br ?hidden=${isOn || suspended}>
+                <span class="iu-start" ?hidden=${isOn}>${startStr}</span>
               </div>
             </div>
             <div class="iu-td5 iu-duration">
-              <div ?hidden=${!isEnabled || isBlocked || !isRunning}>${duration}</div>
+              <div ?hidden=${!isEnabled || suspended || isBlocked || !isRunning}>${duration}</div>
             </div>
             <div class="iu-td6 iu-adjustment">
             <div ?hidden=${isManual}>${sequence.adjustment}</div>
             </div>
-            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, false, sequence.adjustment)}</div>
+            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, false, sequence.adjustment, suspended)}</div>
           </div>
           <div class="iu-sequence-zones iu-content">
             ${sequence.zones.map((sequenceZone: any) => this._renderSequenceZone(controller, sequence.index, sequenceZone, isManual))}
@@ -361,12 +392,21 @@ export class IrrigationUnlimitedCard extends LitElement {
   private _renderSequenceZone(controller: number, sequence: number, sequenceZone: any, isManual: boolean): TemplateResult {
     const isOn = (sequenceZone.status === 'on');
     const isEnabled = (sequenceZone.enabled);
-    const isBlocked = (sequenceZone.status === 'blocked')
-    const isRunning = (sequenceZone.duration !== 0)
-    const duration = new Date(sequenceZone.duration * 1000).toISOString().substring(12, 19)
+    const suspended = (sequenceZone.suspended);
+    const isBlocked = (sequenceZone.status === 'blocked');
+    const isRunning = (sequenceZone.duration !== 0);
+    const duration = new Date(sequenceZone.duration * 1000).toISOString().substring(12, 19);
+
+    let startStr = '';
+    const start = new Date(suspended);
+    if (!isNaN(start.getTime())) {
+      startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
+    }
+
     const classes: Array<string> = ['iu-sequence-zone-row iu-td'];
     if (isOn) classes.push('iu-on');
     if (isEnabled) classes.push('iu-enabled');
+    if (suspended) classes.push('iu-suspended');
     if (isManual) classes.push('iu-manual');
     if (isRunning) classes.push('iu-running');
     if (isBlocked) classes.push('iu-blocked');
@@ -381,14 +421,18 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-td3">
             <span>${sequenceZone.zone_ids.map((zoneRef: number, index: number, array) => this._renderSequenceZoneRef(controller, zoneRef, index === array.length - 1))}</span>
           </div>
-          <div class="iu-td4"></div>
+          <div class="iu-td4">
+            <div ?hidden=${!isEnabled || isBlocked}>
+                <span class="iu-start">${startStr}</span>
+            </div>
+          </div>
           <div class="iu-td5 iu-duration">
-            <div ?hidden=${!isEnabled || isBlocked || !isRunning}>${duration}</div>
+            <div ?hidden=${!isEnabled || suspended || isBlocked || !isRunning}>${duration}</div>
           </div>
           <div class="iu-td6 iu-adjustment">
             <div ?hidden=${isManual}>${sequenceZone.adjustment}</div>
           </div>
-          <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, false, false, sequenceZone.adjustment)}</div>
+          <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, false, false, sequenceZone.adjustment, suspended)}</div>
         </div>
       </div>
     `;
@@ -414,7 +458,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     `;
   }
 
-  private _renderMenu(isEnabled: boolean, isBlocked: boolean, allowManual: boolean, allowCancel: boolean, adjustment: string | null | undefined): TemplateResult {
+  private _renderMenu(isEnabled: boolean, isBlocked: boolean, allowManual: boolean, allowCancel: boolean, adjustment: string | null | undefined, suspended: string | null | undefined): TemplateResult {
     return html`
       <div class="iu-menu">
         <ha-icon class="iu-menu-button" icon="mdi:dots-vertical" @click="${this._toggleMenu}"></ha-icon>
@@ -423,6 +467,25 @@ export class IrrigationUnlimitedCard extends LitElement {
             <div class="iu-mc1">Enable</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">${this._renderEnabled(isEnabled, isBlocked)}</div>
+          </div>
+          <div class="iu-menu-item ${(suspended === undefined) ? 'iu-hidden' : ''}">
+            <div class="iu-mc1">Suspend</div>
+            <div class="iu-mc2">
+              <input type="text"
+                class="iu-time-input"
+                placeholder="h:mm:ss"
+                title="Duration\n===============\nh:mm:ss\n<blank> = reset"
+                size="8"
+                maxlength="8"
+                required
+                pattern="^[0-9]{1,2}:[0-9]{2}:[0-9]{2}$">
+              </input>
+            </div>
+            <div class="iu-mc3">
+              <ha-icon-button icon="mdi:timer-outline" @click="${this._serviceSuspend}">
+                <ha-icon icon="mdi:timer-outline"></ha-icon>
+              </ha-icon-button>
+            </div>
           </div>
           <div class="iu-menu-item ${(!allowManual) ? 'iu-hidden' : ''}">
             <div class="iu-mc1">Manual</div>
@@ -457,7 +520,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             <div class="iu-mc2">
               <input type="text"
                 class="iu-adjust-input"
-                value=${adjustment}
+                value=${adjustment ?? ''}
                 title="Adjustment options\n===============\nPercentage: %n\nActual: =0:00:00\nIncrease: +0:00:00\nDecrease: -0:00:00\nReset: <blank>"
                 size="9"
                 maxlength="9"
@@ -549,6 +612,19 @@ export class IrrigationUnlimitedCard extends LitElement {
 
     this.hass.callService('irrigation_unlimited', 'toggle', data);
     return;
+  }
+
+  private _serviceSuspend(e: Event): void {
+    const data = this._build_data(e);
+    if (!data) return;
+
+    const timeElement = (e.target as Element).closest('.iu-menu-item')?.querySelector('.iu-time-input') as HTMLInputElement;
+    if (timeElement.value)
+      data['for'] = timeElement.value;
+    else
+      data['reset'] = null;
+
+    this.hass.callService('irrigation_unlimited', 'suspend', data);
   }
 
   private _serviceManualRun(e: Event): void {
@@ -707,6 +783,11 @@ export class IrrigationUnlimitedCard extends LitElement {
 
       .iu-manual .iu-schedule {
         color: var(--label-badge-red, #DF4C1E);
+      }
+
+      .iu-suspended .iu-start {
+        color: var(--label-badge-yellow, #FFFF00);
+        font-style: italic;
       }
 
       .iu-name {
