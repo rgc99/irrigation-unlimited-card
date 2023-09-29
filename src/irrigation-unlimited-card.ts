@@ -328,7 +328,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const isBlocked = (sequence.status === 'blocked')
     const isManual = (isEnabled && !suspended && sequence.schedule.index === null);
     const isRunning = (sequence.duration !== 0)
-    let start: Date;
+    let start: Date | null;
     let duration: string;
     let schedule_name: string;
     let startStr = '';
@@ -338,12 +338,12 @@ export class IrrigationUnlimitedCard extends LitElement {
       duration = '';
       schedule_name = '';
     } else {
-      start = new Date(sequence.start);
+      sequence.start !== null ? start = new Date(sequence.start) : start = null;
       duration = new Date(sequence.duration * 1000).toISOString().substring(12, 19);
       schedule_name = sequence.schedule.name;
     }
 
-    if (!isNaN(start.getTime())) {
+    if (start !== null && !isNaN(start.getTime())) {
       startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
     }
     const classes: Array<string> = ['iu-sequence-row iu-td'];
@@ -396,11 +396,13 @@ export class IrrigationUnlimitedCard extends LitElement {
     const isBlocked = (sequenceZone.status === 'blocked');
     const isRunning = (sequenceZone.duration !== 0);
     const duration = new Date(sequenceZone.duration * 1000).toISOString().substring(12, 19);
-
     let startStr = '';
-    const start = new Date(suspended);
-    if (!isNaN(start.getTime())) {
-      startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
+
+    if (suspended !== null) {
+      const start = new Date(suspended);
+      if (!isNaN(start.getTime())) {
+        startStr = start.toLocaleTimeString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit', hour12: false })
+      }
     }
 
     const classes: Array<string> = ['iu-sequence-zone-row iu-td'];
