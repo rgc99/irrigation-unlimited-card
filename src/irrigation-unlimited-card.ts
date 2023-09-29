@@ -873,6 +873,6 @@ export class IrrigationUnlimitedCard extends LitElement {
       .iu-time-input:invalid {
         color: var(--label-badge-red, #DF4C1E);
       }
-    }`;
+    `;
   }
 }
