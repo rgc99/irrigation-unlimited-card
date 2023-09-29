@@ -479,7 +479,6 @@ export class IrrigationUnlimitedCard extends LitElement {
                 maxlength="8"
                 required
                 pattern="^[0-9]{1,2}:[0-9]{2}:[0-9]{2}$">
-              </input>
             </div>
             <div class="iu-mc3">
               <ha-icon-button icon="mdi:timer-outline" @click="${this._serviceSuspend}">
@@ -498,7 +497,6 @@ export class IrrigationUnlimitedCard extends LitElement {
                 maxlength="8"
                 required
                 pattern="^[0-9]{1,2}:[0-9]{2}:[0-9]{2}$">
-              </input>
             </div>
             <div class="iu-mc3">
               <ha-icon-button icon="mdi:play" @click="${this._serviceManualRun}">
@@ -525,7 +523,6 @@ export class IrrigationUnlimitedCard extends LitElement {
                 size="9"
                 maxlength="9"
                 pattern="^$|^[=+-][0-9]{1,2}:[0-9]{2}:[0-9]{2}$|^%[0-9]*\.?[0-9]+$">
-              </input>
             </div>
             <div class="iu-mc3">
               <ha-icon-button icon="mdi:adjust" @click="${this._serviceAdjust}">
