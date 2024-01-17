@@ -28,7 +28,7 @@ console.info(
   description: 'A companion card for the Irrigation Unlimited integration',
 });
 
-type IUEntity = { entity_id: string; last_updated: Date; name: string | undefined };
+type IUEntity = { entity_id: string; last_updated: Date; name: string | undefined; zone_id: string };
 
 @customElement('irrigation-unlimited-card')
 export class IrrigationUnlimitedCard extends LitElement {
@@ -73,7 +73,7 @@ export class IrrigationUnlimitedCard extends LitElement {
         if (entity_id.startsWith("binary_sensor.irrigation_unlimited_")) {
           const entity = this.hass.states[entity_id]
           const date: Date = new Date(entity.last_updated);
-          this._iu_entities.push({ entity_id: entity_id, last_updated: date, name: entity.attributes.friendly_name });
+          this._iu_entities.push({ entity_id: entity_id, last_updated: date, name: entity.attributes.friendly_name, zone_id: entity.attributes?.zone_id });
         }
       }
       return true;
@@ -421,7 +421,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             <ha-icon .icon=${sequenceZone.icon} ?is-on=${isOn}></ha-icon>
           </div>
           <div class="iu-td3">
-            <span>${sequenceZone.zone_ids.map((zoneRef: number, index: number, array) => this._renderSequenceZoneRef(controller, zoneRef, index === array.length - 1))}</span>
+            <span>${sequenceZone.zone_ids.map((zoneRef: string, index: number, array) => this._renderSequenceZoneRef(controller, zoneRef, index === array.length - 1))}</span>
           </div>
           <div class="iu-td4">
             <div ?hidden=${!isEnabled || isBlocked}>
@@ -440,12 +440,12 @@ export class IrrigationUnlimitedCard extends LitElement {
     `;
   }
 
-  private _renderSequenceZoneRef(controller: number, zoneRef: number, last: boolean): TemplateResult {
-    const entity_id = `binary_sensor.irrigation_unlimited_c${controller + 1}_z${zoneRef}`;
+  private _renderSequenceZoneRef(controller: number, zoneRef: string, last: boolean): TemplateResult {
+    const entity_id = `binary_sensor.irrigation_unlimited_c${controller + 1}_`;
     let name: string | undefined = undefined;
     if (this._iu_entities !== undefined) {
       for (const iu_entity of this._iu_entities) {
-        if (iu_entity.entity_id === entity_id) {
+        if (iu_entity.entity_id.startsWith(entity_id) && iu_entity.zone_id === zoneRef) {
           if (iu_entity.name) {
             name = iu_entity.name;
           }
@@ -456,7 +456,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (name)
       return html`<span class="iu-name">${name}${last === false ? ", " : ""}</span>`;
     return html`
-      <span style="color: ${this._selectColour(zoneRef - 1)}">${zoneRef}</span>
+      <span style="color: ${this._selectColour(parseInt(zoneRef) - 1)}">${zoneRef}</span>
     `;
   }
 
