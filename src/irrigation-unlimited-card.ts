@@ -379,7 +379,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             <div class="iu-td6 iu-adjustment">
             <div ?hidden=${isManual}>${sequence.adjustment}</div>
             </div>
-            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, false, sequence.adjustment, suspended)}</div>
+            <div class="iu-td7">${this._renderMenu(isEnabled, isBlocked, true, true, sequence.adjustment, suspended)}</div>
           </div>
           <div class="iu-sequence-zones iu-content">
             ${sequence.zones.map((sequenceZone: any) => this._renderSequenceZone(controller, sequence.index, sequenceZone, isManual))}
