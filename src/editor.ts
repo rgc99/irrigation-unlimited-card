@@ -37,32 +37,40 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
     }
 
     return html`
-      <paper-input
-        label="Name (Optional)"
-        .value=${this._name}
-        .configValue=${'name'}
-        @value-changed=${this._valueChanged}
-      ></paper-input>
-      <paper-input
-        label="Show controllers (CSV list)"
-        .value=${this._show_controllers}
-        .configValue=${'show_controllers'}
-        @value-changed=${this._valueChanged}
-      ></paper-input>
-      <ha-formfield label="Always show zones">
+    <div class="iu-editor-row">
+        <ha-textfield
+          label="Title (optional)"
+          .value=${this._name}
+          .configValue=${'name'}
+          @input="${this._valueChanged}"
+        ></ha-textfield>
+    </div>
+    <div class="iu-editor-row">
+        <ha-textfield
+          label="Show controllers (CSV list)"
+          .value=${this._show_controllers}
+          .configValue=${'show_controllers'}
+          @input="${this._valueChanged}"
+        ></ha-textfield>
+    </div>
+    <div class="iu-editor-row">
         <ha-switch
+          id=${this._always_show_zones}
           .checked=${this._always_show_zones}
           .configValue=${'always_show_zones'}
           @change=${this._valueChanged}
-        </ha-switch>
-      </ha-formfield>
-      <ha-formfield label="Always show sequences">
+        ></ha-switch>
+        <label for=${this._always_show_zones}>Always show zones</label>
+    </div>
+    <div class="iu-editor-row">
         <ha-switch
+          id=${this._always_show_sequences}
           .checked=${this._always_show_sequences}
           .configValue=${'always_show_sequences'}
           @change=${this._valueChanged}
-        </ha-switch>
-      </ha-formfield>
+        ></ha-switch>
+        <label for=${this._always_show_sequences}>Always show sequences</label>
+    </div>
     `;
   }
 
@@ -71,9 +79,6 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
       return;
     }
     const target = ev.target;
-    if (this[`_${target.configValue}`] === target.value) {
-      return;
-    }
     if (target.configValue) {
       if (target.value === '') {
         const tmpConfig = { ...this._config };
@@ -86,9 +91,15 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
         };
       }
     }
-    fireEvent(this, 'config-changed', { config: this._config });
+    fireEvent(this, 'config-changed', { config: this._config }, { bubbles: true, composed: true });
   }
 
   static styles: CSSResultGroup = css`
+    ha-switch {
+      padding: 16px 6px;
+    }
+    ha-textfield {
+      width: 100%;
+    }
   `;
 }
