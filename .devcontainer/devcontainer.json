@@ -3,11 +3,8 @@
   "name": "Irrigation Unlimited Card Development",
   "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
   // "context": "..",
-  "appPort": [
-    "5000:5000",
-    "9123:8123"
-  ],
-	"postCreateCommand": "scripts/setup",
+  "appPort": ["5000:5000", "9123:8123"],
+  "postCreateCommand": "scripts/setup",
   "runArgs": [
     "-v",
     "${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh" // This is added so you can push from inside the container
