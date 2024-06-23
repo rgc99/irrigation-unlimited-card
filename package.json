@@ -11,15 +11,16 @@
     "custom-cards",
     "irrigation"
   ],
+  "type": "module",
   "module": "irrigation-unlimited-card.js",
   "repository": "https://github.com/rgc99/irrigation-unlimited-card",
   "author": "rgc99",
   "license": "MIT",
   "dependencies": {
     "@lit-labs/scoped-registry-mixin": "^1.0.0",
-    "custom-card-helpers": "^1.7.2",
-    "home-assistant-js-websocket": "^5.11.1",
-    "lit": "^2.0.0"
+    "global": "^4.4.0",
+    "home-assistant-js-websocket": "^9.3.0",
+    "lit": "^2.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
@@ -28,13 +29,14 @@
     "@rollup/plugin-json": "^4.1.0",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
-    "eslint": "^7.32.0",
+    "eslint": "^8.52.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.24.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "prettier": "^2.4.1",
-    "rollup": "^2.58.0",
+    "prettier": "^3.1.0",
+    "prettier-eslint": "^16.1.2",
+    "rollup": "^2.79.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",

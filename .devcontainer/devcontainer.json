@@ -1,32 +1,44 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
   "name": "Irrigation Unlimited Card Development",
-  "image": "ghcr.io/ludeeus/devcontainer/generic:latest",
-  "context": "..",
-  "appPort": ["5000:5000", "9123:8123"],
-  "postCreateCommand": "npm install",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
+  // "context": "..",
+  "appPort": [
+    "5000:5000",
+    "9123:8123"
+  ],
+	"postCreateCommand": "scripts/setup",
   "runArgs": [
     "-v",
     "${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh" // This is added so you can push from inside the container
   ],
-  "extensions": [
-    "github.vscode-pull-request-github",
-    "eamodio.gitlens",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "bierner.lit-html",
-    "runem.lit-plugin",
-    "auchenberg.vscode-browser-preview",
-    "davidanson.vscode-markdownlint",
-    "redhat.vscode-yaml"
-  ],
-  "settings": {
-    "files.eol": "\n",
-    "editor.tabSize": 4,
-    "terminal.integrated.shell.linux": "/bin/bash",
-    "editor.formatOnPaste": false,
-    "editor.formatOnSave": true,
-    "editor.formatOnType": true,
-    "files.trimTrailingWhitespace": true
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "github.vscode-pull-request-github",
+        "eamodio.gitlens",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bierner.lit-html",
+        "runem.lit-plugin",
+        "auchenberg.vscode-browser-preview",
+        "davidanson.vscode-markdownlint",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "editor.tabSize": 4,
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.formatOnPaste": false,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "files.trimTrailingWhitespace": true
+      }
+    }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "latest"
+    }
   }
 }
