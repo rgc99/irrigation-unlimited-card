@@ -249,7 +249,7 @@ export class IUCoordinator {
   private initialised: boolean = false;
   private version: string = "";
   private parent: any;
-  private timer_id: NodeJS.Timeout | undefined = undefined;
+  private timer_id: number | undefined = undefined;
 
   constructor(parent: any) {
     this.parent = parent;
