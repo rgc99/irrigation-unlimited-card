@@ -6,7 +6,7 @@ import {
   CSSResultGroup,
   nothing,
 } from "lit";
-import { customElement, property, state } from "lit/decorators";
+import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant } from "./ha-types";
 import { fireEvent } from "./fire_event";
 
