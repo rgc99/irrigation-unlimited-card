@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { LitElement, html, TemplateResult, PropertyValues, nothing } from "lit";
+import { customElement, property, state } from "lit/decorators.js";
 import "./editor";
 import {
   IUCoordinator,
@@ -9,9 +11,6 @@ import {
   IUTimeline,
 } from "./iu";
 import { styles } from "./styles";
-
-import { LitElement, html, TemplateResult, PropertyValues, nothing } from "lit";
-import { customElement, property, state } from "lit/decorators";
 
 import { HomeAssistant } from "./ha-types";
 import type {
