@@ -11,7 +11,6 @@ import {
   IUTimeline,
 } from "./iu";
 import { styles } from "./styles";
-
 import { HomeAssistant } from "./ha-types";
 import type {
   IrrigationUnlimitedCardConfig,
@@ -19,6 +18,7 @@ import type {
 } from "./types";
 import { CARD_VERSION } from "./const";
 import { localize } from "./localize/localize";
+import { date_to_str } from "./util";
 
 /* eslint no-console: 0 */
 console.info(
@@ -124,7 +124,6 @@ export class IrrigationUnlimitedCard extends LitElement {
     let start: Date;
     let duration: string | undefined;
     let schedule_name: string;
-    let startStr = "";
 
     if (isOn) {
       start = new Date(stateObj.attributes.current_start);
@@ -139,14 +138,7 @@ export class IrrigationUnlimitedCard extends LitElement {
       duration = stateObj.attributes.next_duration;
       schedule_name = stateObj.attributes.next_name;
     }
-    if (!isNaN(start.getTime())) {
-      startStr = start.toLocaleTimeString(undefined, {
-        weekday: "short",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: false,
-      });
-    }
+    const startStr = date_to_str(start);
 
     const controllerClasses: Array<string> = ["iu-controller iu-object"];
     if (isHidden) controllerClasses.push("iu-hidden");
@@ -246,7 +238,6 @@ export class IrrigationUnlimitedCard extends LitElement {
     let schedule_index: number;
     let schedule_name: string;
     let adjustment: string;
-    let startStr = "";
 
     if (isOn) {
       start = new Date(stateObj.attributes.current_start);
@@ -268,14 +259,7 @@ export class IrrigationUnlimitedCard extends LitElement {
       adjustment = stateObj.attributes.next_adjustment;
     }
     const isManual = schedule_index === 0;
-    if (!isNaN(start.getTime())) {
-      startStr = start.toLocaleTimeString(undefined, {
-        weekday: "short",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: false,
-      });
-    }
+    const startStr = date_to_str(start);
     const classes: Array<string> = ["iu-zone-row iu-td"];
     if (isOn) classes.push("iu-on");
     if (isEnabled) classes.push("iu-enabled");
@@ -418,7 +402,6 @@ export class IrrigationUnlimitedCard extends LitElement {
     let schedule_index: number;
     let schedule_name: string;
     let adjustment: string;
-    let startStr = "";
 
     if (isOn || isPaused || isDelay) {
       start = new Date(stateObj.attributes.current_start);
@@ -441,15 +424,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     }
     const isManual = schedule_index === 0;
     const isRunning = sequence.remaining !== "0:00:00";
-
-    if (start !== null && !isNaN(start.getTime())) {
-      startStr = start.toLocaleTimeString(undefined, {
-        weekday: "short",
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: false,
-      });
-    }
+    const startStr = date_to_str(start);
     const classes: Array<string> = ["iu-sequence-row iu-td"];
     if (isOn) classes.push("iu-on");
     if (isPaused) classes.push("iu-paused");
@@ -550,14 +525,7 @@ export class IrrigationUnlimitedCard extends LitElement {
 
     if (suspended !== null) {
       const start = new Date(suspended);
-      if (!isNaN(start.getTime())) {
-        startStr = start.toLocaleTimeString(undefined, {
-          weekday: "short",
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: false,
-        });
-      }
+      startStr = date_to_str(start);
     }
     const classes: Array<string> = ["iu-sequence-zone-row iu-td"];
     if (isOn) classes.push("iu-on");

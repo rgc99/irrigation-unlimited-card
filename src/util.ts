@@ -17,3 +17,15 @@ export function secs_to_hms(value: number | undefined): string | undefined {
     String(seconds).padStart(2, "0")
   );
 }
+
+export function date_to_str(value: Date): string {
+  if (value !== null && !isNaN(value.getTime())) {
+    return value.toLocaleTimeString(undefined, {
+      weekday: "short",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: false,
+    });
+  }
+  return "";
+}
