@@ -17,4 +17,4 @@ jobs:
       - name: Build
         run: |
           npm install
-          npm run rollup
+          npm run build
