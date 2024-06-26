@@ -186,9 +186,14 @@ export class IUSequence extends IUEntity {
         zone.icon = z.icon;
         zone.enabled = z.enabled;
         zone.suspended = z.suspended ? new Date(z.suspended) : null;
-        zone.start = new Date(z.start);
-        zone._duration = hms_to_secs(z.duration);
-        zone.adjustment = z.adjustment;
+                zone.adjustment = z.adjustment;
+if (z.start) {
+          zone.start = new Date(z.start);
+          zone._duration = hms_to_secs(z.duration);
+        } else {
+          zone.start = undefined;
+          zone._duration = 0;
+        }
         if (zone.status === "off" && z.status === "on") {
           zone._remaining = zone._duration;
           zone.percent_completed = 0;
