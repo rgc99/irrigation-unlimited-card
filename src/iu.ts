@@ -186,8 +186,8 @@ export class IUSequence extends IUEntity {
         zone.icon = z.icon;
         zone.enabled = z.enabled;
         zone.suspended = z.suspended ? new Date(z.suspended) : null;
-                zone.adjustment = z.adjustment;
-if (z.start) {
+        zone.adjustment = z.adjustment;
+        if (z.start) {
           zone.start = new Date(z.start);
           zone._duration = hms_to_secs(z.duration);
         } else {
