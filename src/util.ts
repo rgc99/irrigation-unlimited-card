@@ -29,3 +29,11 @@ export function date_to_str(value: Date): string {
   }
   return "";
 }
+
+export function elapsed_secs(d1: Date, d2: Date): number {
+  return Math.round((d1.getTime() - d2.getTime()) / 1000);
+}
+
+export function percent_completed(elapsed: number, total: number): number {
+  return Math.round((elapsed / total) * 100);
+}

@@ -1,5 +1,10 @@
 import { HomeAssistant } from "./ha-types";
-import { hms_to_secs, secs_to_hms } from "./util";
+import {
+  hms_to_secs,
+  secs_to_hms,
+  elapsed_secs,
+  percent_completed,
+} from "./util";
 
 interface EntityInfo {
   index: number;
@@ -100,9 +105,9 @@ class IUEntity {
   public timer(now: Date): void {
     if (!this.start || !this.duration) return;
     if (this.status === "on" || this.status === "delay") {
-      const elapsed = Math.round((now.getTime() - this.start.getTime()) / 1000);
+      const elapsed = elapsed_secs(now, this.start);
       this._remaining = this.duration - elapsed;
-      this._percent_completed = Math.round((elapsed / this.duration) * 100);
+      this._percent_completed = percent_completed(elapsed, this.duration);
     }
   }
 }
@@ -199,12 +204,10 @@ export class IUSequence extends IUEntity {
     super.timer(now);
     if (this.status === "on")
       for (const z of this.zones) {
-        if (z.start && z._duration) {
-          const elapsed = Math.round(
-            (now.getTime() - z.start.getTime()) / 1000
-          );
+        if (z.start && z._duration && z.status === "on") {
+          const elapsed = elapsed_secs(now, z.start);
           z._remaining = z._duration - elapsed;
-          z.percent_completed = Math.round((elapsed / z._duration) * 100);
+          z.percent_completed = percent_completed(elapsed, z._duration);
         }
       }
   }
