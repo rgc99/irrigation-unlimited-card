@@ -140,7 +140,7 @@ export class IUSequenceZone {
   }
 
   public get duration(): string | undefined {
-    return secs_to_hms(this._remaining);
+    return secs_to_hms(this._duration);
   }
 
   protected set duration(value: string | undefined) {
