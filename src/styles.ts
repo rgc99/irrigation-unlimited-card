@@ -61,21 +61,6 @@ export const styles = css`
     height: 2em;
   }
 
-  .iu-timeline-scheduled,
-  .iu-timeline-scheduled .iu-schedule {
-    color: var(--label-badge-blue, #039be5);
-  }
-
-  .iu-timeline-next,
-  .iu-timeline-next .iu-schedule {
-    color: var(--label-badge-red, #db4437);
-  }
-
-  .iu-timeline-history,
-  .iu-timeline-history .iu-schedule {
-    color: var(--label-badge-green, #43a047);
-  }
-
   .iu-td {
     display: flex;
     align-items: center;
@@ -117,12 +102,35 @@ export const styles = css`
     text-align: center;
   }
 
-  .iu-on .iu-duration,
-  .iu-delay .iu-duration {
+  /* Timeline colouring */
+  .iu-timeline-scheduled,
+  .iu-timeline-scheduled .iu-schedule,
+  .iu-timeline-next,
+  .iu-timeline-next .iu-schedule {
+    color: var(--label-badge-blue, #039be5);
+  }
+
+  .iu-timeline-running,
+  .iu-timeline-running .iu-schedule {
+    color: var(--label-badge-green, #43a047);
+  }
+
+  /* Duration colouring */
+  .iu-sequence.iu-on .iu-sequence-zone:not(.iu-on) .iu-duration,
+  .iu-sequence.iu-paused .iu-sequence-zone:not(.iu-on) .iu-duration,
+  .iu-sequence.iu-delay .iu-sequence-zone:not(.iu-on) .iu-duration {
+    color: var(--label-badge-blue);
+  }
+
+  .iu-controller.iu-on .iu-controller-row .iu-duration,
+  .iu-zone.iu-on .iu-zone-row .iu-duration,
+  .iu-sequence.iu-on .iu-sequence-row .iu-duration,
+  .iu-sequence.iu-on .iu-sequence-zone-row .iu-duration {
     color: var(--state-on-color, #66a61e);
   }
 
-  .iu-paused .iu-duration {
+  .iu-sequence.iu-paused .iu-sequence-row .iu-duration,
+  .iu-sequence.iu-paused .iu-sequence-zone.iu-on .iu-duration {
     color: var(--state-on-color, #66a61e);
     animation: 1s step-end infinite duration-paused;
   }
@@ -133,20 +141,26 @@ export const styles = css`
     }
   }
 
+  /* Schedule colouring */
   .iu-schedule {
     color: var(--secondary-text-color, #727272);
     font-size: small;
   }
 
-  .iu-manual .iu-schedule {
+  .iu-controller.iu-manual .iu-schedule,
+  .iu-zone.iu-manual .iu-zone-row .iu-schedule,
+  .iu-sequence.iu-manual .iu-schedule {
     color: var(--label-badge-red, #df4c1e);
   }
 
-  .iu-suspended .iu-start {
+  .iu-controller.iu-suspended .iu-start,
+  .iu-zone.iu-suspended .iu-zone-row .iu-schedule,
+  .iu-sequence.iu-suspended .iu-schedule {
     color: var(--label-badge-yellow, #ffff00);
     font-style: italic;
   }
 
+  /* Name colouring */
   .iu-name {
     color: var(--secondary-text-color, #727272);
     font-weight: 500;
@@ -155,13 +169,17 @@ export const styles = css`
     text-overflow: ellipsis;
   }
 
+  /* Icon colouring */
   ha-icon {
     color: var(--state-icon-color, #44739e);
   }
 
-  .iu-on .iu-td2 ha-icon,
-  .iu-paused .iu-td2 ha-icon,
-  .iu-delay .iu-td2 ha-icon {
+  .iu-controller.iu-on .iu-controller-row .iu-td2 ha-icon,
+  .iu-zone.iu-on .iu-zone-row .iu-td2 ha-icon,
+  .iu-sequence.iu-on .iu-sequence-row .iu-td2 ha-icon,
+  .iu-sequence.iu-paused .iu-sequence-row .iu-td2 ha-icon,
+  .iu-sequence.iu-delay .iu-sequence-row .iu-td2 ha-icon,
+  .iu-sequence-zone.iu-on .iu-td2 ha-icon {
     color: var(--state-icon-active-color, #fdd835);
   }
 
