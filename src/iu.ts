@@ -42,40 +42,82 @@ interface GetInfo {
   controllers: [ControllerInfo];
 }
 
+interface IUSequenceZoneStatus {
+  index: number;
+  enabled: boolean;
+  status: string;
+  start: string | null;
+  duration: string;
+  suspended: string | null;
+  icon: string;
+  adjustment: string;
+  zone_ids: string[];
+}
+
 const enum IUUpdateStatus {
   None = 0,
   EntityUpdated = 1 << 0,
   TimerRequired = 1 << 1,
 }
 
-class IUEntity {
-  public index: number;
-  public name: string;
-  public entity_id: string;
+class IUBase {
   public start: Date | undefined = undefined;
-  protected status: string | undefined = undefined;
-  protected duration: number | undefined = undefined;
+  public status: string | undefined = undefined;
+  protected _duration: number | undefined = undefined;
   protected _remaining: number | undefined = undefined;
-  private last_updated: Date | undefined = undefined;
   private _percent_completed: number | undefined = undefined;
 
-  constructor(data: EntityInfo) {
-    this.index = data.index;
-    this.name = data.name;
-    this.entity_id = data.entity_id;
+  public get duration(): string | undefined {
+    return secs_to_hms(this._duration);
+  }
+
+  protected set duration(value: string | undefined) {
+    this._duration = hms_to_secs(value);
+    return;
   }
 
   public get remaining(): string | undefined {
     return secs_to_hms(this._remaining);
   }
 
-  protected set remaining(value: string | undefined) {
+  public set remaining(value: string) {
     this._remaining = hms_to_secs(value);
-    return;
   }
 
   public get percent_completed(): number | undefined {
     return this._percent_completed;
+  }
+
+  public update_stats(now: Date): void {
+    if (this.start && this._duration) {
+      if (this.status === "on" || this.status === "delay") {
+        const elapsed = elapsed_secs(now, this.start);
+        this._remaining = this._duration - elapsed;
+        this._percent_completed = percent_completed(elapsed, this._duration);
+      }
+    }
+  }
+
+  public clear_stats(): void {
+    this._remaining = this._percent_completed = undefined;
+  }
+}
+
+class IUEntity extends IUBase {
+  public index: number;
+  public name: string;
+  public entity_id: string;
+  private last_updated: Date | undefined = undefined;
+
+  public get id1(): number {
+    return this.index + 1;
+  }
+
+  constructor(data: EntityInfo) {
+    super();
+    this.index = data.index;
+    this.name = data.name;
+    this.entity_id = data.entity_id;
   }
 
   public update(hass: HomeAssistant): number {
@@ -93,9 +135,12 @@ class IUEntity {
         this.status === "paused"
       ) {
         this.start = new Date(entity.attributes.current_start);
-        this.duration = hms_to_secs(entity.attributes.current_duration);
+        this.duration = entity.attributes.current_duration;
         this.remaining = entity.attributes.time_remaining;
-      } else this.duration = this.start = this._remaining = undefined;
+      } else {
+        this.start = undefined;
+        this.clear_stats();
+      }
     }
     if (this.status === "on" || this.status === "delay")
       result |= IUUpdateStatus.TimerRequired;
@@ -103,62 +148,45 @@ class IUEntity {
   }
 
   public timer(now: Date): void {
-    if (!this.start || !this.duration) return;
-    if (this.status === "on" || this.status === "delay") {
-      const elapsed = elapsed_secs(now, this.start);
-      this._remaining = this.duration - elapsed;
-      this._percent_completed = percent_completed(elapsed, this.duration);
-    }
+    if (this.status === "on" || this.status === "delay") this.update_stats(now);
   }
 }
 
-export class IUSequenceZone {
+export class IUSequenceZone extends IUBase {
   public index: number;
   public zone_ids: string[];
   public enabled: boolean = true;
-  public status?: string;
   public suspended: Date | null = null;
   public icon?: string;
   public adjustment?: string;
-  public start?: Date;
-  public _duration?: number;
-  public _remaining?: number;
-  public percent_completed?: number;
+
+  public get id1(): number {
+    return this.index + 1;
+  }
 
   constructor(data: SequenceZoneInfo) {
+    super();
     this.index = data.index;
     this.zone_ids = data.zone_ids;
   }
 
-  public get remaining(): string | undefined {
-    return secs_to_hms(this._remaining);
+  public assign(szs: IUSequenceZoneStatus) {
+    this.icon = szs.icon;
+    this.enabled = szs.enabled;
+    this.suspended = szs.suspended ? new Date(szs.suspended) : null;
+    this.adjustment = szs.adjustment;
+    if (szs.start) {
+      this.start = new Date(szs.start);
+      this.duration = szs.duration;
+    } else {
+      this.start = undefined;
+      this.duration = "0:00:00";
+    }
+    if (this.status === "off" && szs.status === "on") {
+      this._remaining = this._duration;
+    } else if (szs.status === "off") this._remaining = undefined;
+    this.status = szs.status;
   }
-
-  protected set remaining(value: string | undefined) {
-    this._remaining = hms_to_secs(value);
-    return;
-  }
-
-  public get duration(): string | undefined {
-    return secs_to_hms(this._duration);
-  }
-
-  protected set duration(value: string | undefined) {
-    this._remaining = hms_to_secs(value);
-    return;
-  }
-}
-
-interface IUSequenceZoneStatus {
-  index: number;
-  enabled: boolean;
-  status: string;
-  start: string;
-  duration: string;
-  suspended: string | null;
-  icon: string;
-  adjustment: string;
-  zone_ids: string[];
 }
 
 export interface IUTimeline {
@@ -181,26 +209,8 @@ export class IUSequence extends IUEntity {
     let result = super.update(hass);
     if ((result & IUUpdateStatus.EntityUpdated) !== 0) {
       const entity = hass.states[this.entity_id];
-      for (const z of entity.attributes.zones as [IUSequenceZoneStatus]) {
-        const zone = this.zones[z.index];
-        zone.icon = z.icon;
-        zone.enabled = z.enabled;
-        zone.suspended = z.suspended ? new Date(z.suspended) : null;
-        zone.adjustment = z.adjustment;
-        if (z.start) {
-          zone.start = new Date(z.start);
-          zone._duration = hms_to_secs(z.duration);
-        } else {
-          zone.start = undefined;
-          zone._duration = 0;
-        }
-        if (zone.status === "off" && z.status === "on") {
-          zone._remaining = zone._duration;
-          zone.percent_completed = 0;
-        } else if (z.status === "off")
-          zone._remaining = zone.percent_completed = undefined;
-        zone.status = z.status;
-      }
+      for (const szs of entity.attributes.zones as [IUSequenceZoneStatus])
+        this.zones[szs.index].assign(szs);
     }
     return result;
   }
@@ -208,13 +218,7 @@ export class IUSequence extends IUEntity {
   public override timer(now: Date): void {
     super.timer(now);
     if (this.status === "on")
-      for (const z of this.zones) {
-        if (z.start && z._duration && z.status === "on") {
-          const elapsed = elapsed_secs(now, z.start);
-          z._remaining = z._duration - elapsed;
-          z.percent_completed = percent_completed(elapsed, z._duration);
-        }
-      }
+      for (const z of this.zones) if (z.status === "on") z.update_stats(now);
   }
 }
 
@@ -297,6 +301,7 @@ export class IUCoordinator {
   public update(hass: HomeAssistant): boolean {
     if (!this.initialised) return false;
     let result = IUUpdateStatus.None;
+    const now = new Date();
     for (const c of this.controllers) result |= c.update(hass);
     if (
       this.timer_id === undefined &&

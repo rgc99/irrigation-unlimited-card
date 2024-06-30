@@ -125,6 +125,7 @@ export const styles = css`
   .iu-controller.iu-on .iu-controller-row .iu-duration,
   .iu-zone.iu-on .iu-zone-row .iu-duration,
   .iu-sequence.iu-on .iu-sequence-row .iu-duration,
+  .iu-sequence.iu-delay .iu-sequence-row .iu-duration,
   .iu-sequence.iu-on .iu-sequence-zone-row .iu-duration {
     color: var(--state-on-color, #66a61e);
   }
@@ -175,6 +176,7 @@ export const styles = css`
   }
 
   .iu-controller.iu-on .iu-controller-row .iu-td2 ha-icon,
+  .iu-controller.iu-delay .iu-controller-row .iu-td2 ha-icon,
   .iu-zone.iu-on .iu-zone-row .iu-td2 ha-icon,
   .iu-sequence.iu-on .iu-sequence-row .iu-td2 ha-icon,
   .iu-sequence.iu-paused .iu-sequence-row .iu-td2 ha-icon,

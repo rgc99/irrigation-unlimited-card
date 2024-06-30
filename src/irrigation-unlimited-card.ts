@@ -108,6 +108,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const stateObj = this.hass.states[controller.entity_id];
     const status = stateObj.attributes.status;
     const isOn = stateObj.state === "on";
+    const isDelay = status === "delay";
     const isEnabled = stateObj.attributes.enabled;
     const suspended = stateObj.attributes.suspended;
     const isHidden = !(
@@ -116,7 +117,7 @@ export class IrrigationUnlimitedCard extends LitElement {
         this.config.show_controllers
           ?.replace(/\s/g, "")
           .split(",")
-          .includes(controller.index + 1 + ""))
+          .includes(controller.id1 + ""))
     );
     const zonesHidden = !this.config.always_show_zones;
     const sequencesHidden = !this.config.always_show_sequences;
@@ -145,6 +146,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (isOn) classes.push("iu-on");
     if (isEnabled) classes.push("iu-enabled");
     if (suspended) classes.push("iu-suspended");
+    if (isDelay) classes.push("iu-delay");
 
     const zonesClasses: Array<string> = ["iu-zones iu-content"];
     if (zonesHidden) zonesClasses.push("iu-hidden");
@@ -153,7 +155,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (sequencesHidden) sequencesClasses.push("iu-hidden");
 
     return html`
-      <div class=${classes.join(" ")} iu-key="${controller.index + 1}.0.0.0">
+      <div class=${classes.join(" ")} iu-key="${controller.id1}.0.0.0">
         <hr />
         <div class="iu-controller-row iu-td">
           <div class="iu-td1"></div>
@@ -161,7 +163,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             <ha-icon .icon=${stateObj.attributes.icon}></ha-icon>
           </div>
           <div class="iu-td3">
-            <span>${controller.index + 1}</span>
+            <span>${controller.id1}</span>
             <span class="iu-name">${controller.name}</span>
           </div>
           <div class="iu-td4">
@@ -266,7 +268,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     return html`
       <div
         class=${classes.join(" ")}
-        iu-key="${controller.index + 1}.${zone.index + 1}.0.0"
+        iu-key="${controller.id1}.${zone.id1}.0.0"
       >
         <div class="iu-collapsible iu-hidden">
           <div class="iu-zone-row iu-td">
@@ -279,7 +281,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
             <div class="iu-td3">
               <span style="color: ${this._selectColour(zone.index)}"
-                >${zone.index + 1}</span
+                >${zone.id1}</span
               >
               <span class="iu-name">${stateObj.attributes.friendly_name}</span>
             </div>
@@ -438,7 +440,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     return html`
       <div
         class=${classes.join(" ")}
-        iu-key="${controller.index + 1}.0.${sequence.index + 1}.0"
+        iu-key="${controller.id1}.0.${sequence.id1}.0"
       >
         <div class="iu-collapsible iu-hidden">
           <div class="iu-sequence-row iu-td">
@@ -453,7 +455,7 @@ export class IrrigationUnlimitedCard extends LitElement {
               ></ha-icon>
             </div>
             <div class="iu-td3" @click="${this._toggleCollapse}">
-              <span>${sequence.index + 1}</span>
+              <span>${sequence.id1}</span>
               <span class="iu-name">${sequence.name}</span>
             </div>
             <div class="iu-td4">
@@ -533,8 +535,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     return html`
       <div
         class=${classes.join(" ")}
-        iu-key="${controller.index + 1}.0.${sequence.index +
-        1}.${sequenceZone.index + 1}"
+        iu-key="${controller.id1}.0.${sequence.id1}.${sequenceZone.id1}"
       >
         <div class="iu-sequence-zone-row iu-td">
           <div class="iu-td1"></div>
