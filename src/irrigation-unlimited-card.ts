@@ -183,7 +183,7 @@ export class IrrigationUnlimitedCard extends LitElement {
               false,
               true,
               true,
-              3,
+              controller.pause_resume_status(),
               null,
               suspended
             )}

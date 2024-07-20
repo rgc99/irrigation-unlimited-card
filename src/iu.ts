@@ -248,6 +248,20 @@ export class IUController extends IUEntity {
     return undefined;
   }
 
+  private sequence_status(status: string): boolean {
+    for (const s of this.sequences) {
+      if (s.status === status) return true;
+    }
+    return false;
+  }
+
+  public pause_resume_status(): number {
+    let result = 0;
+    if (this.sequence_status("on")) result |= 1;
+    if (this.sequence_status("paused")) result |= 2;
+    return result;
+  }
+
   public override update(hass: HomeAssistant): number {
     let result = super.update(hass);
     for (const z of this.zones) result |= z.update(hass);
