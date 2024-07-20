@@ -454,6 +454,21 @@ class IUController extends IUEntity {
                 return z.name;
         return undefined;
     }
+    sequence_status(status) {
+        for (const s of this.sequences) {
+            if (s.status === status)
+                return true;
+        }
+        return false;
+    }
+    pause_resume_status() {
+        let result = 0;
+        if (this.sequence_status("on"))
+            result |= 1;
+        if (this.sequence_status("paused"))
+            result |= 2;
+        return result;
+    }
     update(hass) {
         let result = super.update(hass);
         for (const z of this.zones)
@@ -646,6 +661,10 @@ const styles = i$2 `
   .iu-timeline-running,
   .iu-timeline-running .iu-schedule {
     color: var(--label-badge-green, #43a047);
+  }
+
+  .iu-timeline-history {
+    color: var(--secondary-text-color, #727272);
   }
 
   /* Duration colouring */
@@ -982,7 +1001,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
           </div>
           <div class="iu-td6"></div>
           <div class="iu-td7">
-            ${this._renderMenu(isEnabled, false, true, true, 3, null, suspended)}
+            ${this._renderMenu(isEnabled, false, true, true, controller.pause_resume_status(), null, suspended)}
           </div>
         </div>
         <div class="iu-control-panel">
@@ -1063,7 +1082,32 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
         if (isBlocked)
             classes.push("iu-blocked");
         let timeline = stateObj.attributes.timeline;
-        if (timeline === undefined)
+        if (timeline !== undefined) {
+            // Filter items
+            timeline = timeline.filter((item) => {
+                return ((item.start !== item.end &&
+                    item.status === "history" &&
+                    (this.config.show_timeline_history === undefined ||
+                        this.config.show_timeline_history)) ||
+                    (item.status === "scheduled" &&
+                        this.config.show_timeline_scheduled) ||
+                    (item.status === "next" && this.config.show_timeline_scheduled) ||
+                    (item.status === "running" && this.config.show_timeline_scheduled));
+            });
+            // Sort items
+            timeline.sort((a, b) => {
+                const da = new Date(a.start).getTime();
+                const db = new Date(b.start).getTime();
+                if (a.status === "history" && a.status === "history")
+                    return db - da;
+                return da - db;
+            });
+            // Move first history item to head
+            const idx = timeline.findIndex((item) => item.status === "history");
+            if (idx >= 0)
+                timeline.unshift(timeline.splice(idx, 1)[0]);
+        }
+        else
             timeline = [];
         return x `
       <div
@@ -1109,26 +1153,13 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             </div>
           </div>
           <div class="iu-zone-timelines iu-content">
-            ${timeline
-            .filter((item) => {
-            return ((item.start !== item.end &&
-                item.status === "history" &&
-                (this.config.show_timeline_history === undefined ||
-                    this.config.show_timeline_history)) ||
-                (item.status === "scheduled" &&
-                    this.config.show_timeline_scheduled) ||
-                (item.status === "next" &&
-                    this.config.show_timeline_scheduled) ||
-                (item.status === "running" &&
-                    this.config.show_timeline_scheduled));
-        })
-            .map((item) => this._renderZoneHistory(item))}
+            ${timeline.map((item) => this._renderTimeline(item))}
           </div>
         </div>
       </div>
     `;
     }
-    _renderZoneHistory(timeline) {
+    _renderTimeline(timeline) {
         const start = new Date(timeline.start);
         const duration = new Date(new Date(timeline.end).getTime() - start.getTime())
             .toISOString()
