@@ -263,8 +263,33 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (suspended) classes.push("iu-suspended");
     if (isManual) classes.push("iu-manual");
     if (isBlocked) classes.push("iu-blocked");
-    let timeline = stateObj.attributes.timeline;
-    if (timeline === undefined) timeline = [];
+    let timeline: IUTimeline[] = stateObj.attributes.timeline;
+    if (timeline !== undefined) {
+      // Filter items
+      timeline = timeline.filter((item: IUTimeline) => {
+        return (
+          (item.start !== item.end &&
+            item.status === "history" &&
+            (this.config.show_timeline_history === undefined ||
+              this.config.show_timeline_history)) ||
+          (item.status === "scheduled" &&
+            this.config.show_timeline_scheduled) ||
+          (item.status === "next" && this.config.show_timeline_scheduled) ||
+          (item.status === "running" && this.config.show_timeline_scheduled)
+        );
+      });
+      // Sort items
+      timeline.sort((a, b) => {
+        const da = new Date(a.start).getTime();
+        const db = new Date(b.start).getTime();
+        if (a.status === "history" && a.status === "history") return db - da;
+        return da - db;
+      });
+      // Move first history item to head
+      const idx = timeline.findIndex((item) => item.status === "history");
+      if (idx >= 0) timeline.unshift(timeline.splice(idx, 1)[0]);
+    } else timeline = [];
+
     return html`
       <div
         class=${classes.join(" ")}
@@ -317,29 +342,14 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div class="iu-zone-timelines iu-content">
-            ${timeline
-              .filter((item: IUTimeline) => {
-                return (
-                  (item.start !== item.end &&
-                    item.status === "history" &&
-                    (this.config.show_timeline_history === undefined ||
-                      this.config.show_timeline_history)) ||
-                  (item.status === "scheduled" &&
-                    this.config.show_timeline_scheduled) ||
-                  (item.status === "next" &&
-                    this.config.show_timeline_scheduled) ||
-                  (item.status === "running" &&
-                    this.config.show_timeline_scheduled)
-                );
-              })
-              .map((item: IUTimeline) => this._renderZoneHistory(item))}
+            ${timeline.map((item) => this._renderTimeline(item))}
           </div>
         </div>
       </div>
     `;
   }
 
-  private _renderZoneHistory(timeline: IUTimeline): TemplateResult {
+  private _renderTimeline(timeline: IUTimeline): TemplateResult {
     const start = new Date(timeline.start);
     const duration = new Date(
       new Date(timeline.end).getTime() - start.getTime()
