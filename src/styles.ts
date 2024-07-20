@@ -115,6 +115,10 @@ export const styles = css`
     color: var(--label-badge-green, #43a047);
   }
 
+  .iu-timeline-history {
+    color: var(--secondary-text-color, #727272);
+  }
+
   /* Duration colouring */
   .iu-sequence.iu-on .iu-sequence-zone:not(.iu-on) .iu-duration,
   .iu-sequence.iu-paused .iu-sequence-zone:not(.iu-on) .iu-duration,
