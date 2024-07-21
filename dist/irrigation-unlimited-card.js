@@ -1123,7 +1123,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             <div class="iu-td2" @click="${this._toggleCollapse}">
               <ha-icon .icon=${stateObj.attributes.icon}></ha-icon>
             </div>
-            <div class="iu-td3">
+            <div class="iu-td3" @click="${this._toggleCollapse}">
               <span style="color: ${this._selectColour(zone.index)}"
                 >${zone.id1}</span
               >
