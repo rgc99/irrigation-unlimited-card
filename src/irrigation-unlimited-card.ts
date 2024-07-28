@@ -17,12 +17,14 @@ import type {
   LovelaceCardEditor,
 } from "./types";
 import { CARD_VERSION } from "./const";
-import { localize } from "./localize/localize";
 import { date_to_str } from "./util";
+import { localise } from "./localize";
+
+const loc = new localise(window.navigator.language);
 
 /* eslint no-console: 0 */
 console.info(
-  `%c  IRRIGATION-UNLIMITED-CARD \n%c  ${localize("common.version")} ${CARD_VERSION}    `,
+  `%c  IRRIGATION-UNLIMITED-CARD \n%c  ${loc.t("common.version")} ${CARD_VERSION}    `,
   "color: orange; font-weight: bold; background: black",
   "color: white; font-weight: bold; background: dimgray"
 );
@@ -47,7 +49,7 @@ export class IrrigationUnlimitedCard extends LitElement {
 
   public setConfig(config: IrrigationUnlimitedCardConfig): void {
     if (!config) {
-      throw new Error(localize("common.invalid_configuration"));
+      throw new Error(loc.t("common.invalidConfiguration"));
     }
     this.config = config;
   }
@@ -191,19 +193,21 @@ export class IrrigationUnlimitedCard extends LitElement {
         </div>
         <div class="iu-control-panel">
           <div class="iu-control-panel-item">
-            <label>Zones&nbsp;</label>
+            <label>${loc.t("controller.zones.name")}&nbsp;</label>
             <ha-switch
               .checked="${!zonesHidden}"
               .disabled="${this.config.always_show_zones}"
+              title=${loc.t("controller.zones.buttonHint")}
               @change="${this._toggleZones}"
             >
             </ha-switch>
           </div>
           <div class="iu-control-panel-item">
-            <label>Sequences&nbsp;</label>
+            <label>${loc.t("controller.sequences.name")}&nbsp;</label>
             <ha-switch
               .checked="${!sequencesHidden}"
               .disabled="${this.config.always_show_sequences}"
+              title=${loc.t("controller.sequences.buttonHint")}
               @change="${this._toggleSequences}"
             >
             </ha-switch>
@@ -628,7 +632,7 @@ export class IrrigationUnlimitedCard extends LitElement {
         ></ha-icon>
         <div class="iu-menu-content iu-hidden">
           <div class="iu-menu-item">
-            <div class="iu-mc1">Enable</div>
+            <div class="iu-mc1">${loc.t("menu.enable.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               ${this._renderEnabled(isEnabled, isBlocked)}
@@ -637,16 +641,13 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div
             class="iu-menu-item ${suspended === undefined ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Suspend</div>
+            <div class="iu-mc1">${loc.t("menu.suspend.name")}</div>
             <div class="iu-mc2">
               <input
                 type="text"
                 class="iu-time-input"
                 placeholder="h:mm:ss"
-                title="Duration
-===============
-h:mm:ss
-<blank> = reset"
+                title=${loc.t("menu.suspend.hint")}
                 size="8"
                 maxlength="8"
                 required
@@ -656,6 +657,7 @@ h:mm:ss
             <div class="iu-mc3">
               <ha-icon-button
                 icon="mdi:timer-outline"
+                title=${loc.t("menu.suspend.buttonHint")}
                 @click="${this._serviceSuspend}"
               >
                 <ha-icon icon="mdi:timer-outline"></ha-icon>
@@ -663,13 +665,13 @@ h:mm:ss
             </div>
           </div>
           <div class="iu-menu-item ${!allowManual ? "iu-hidden" : ""}">
-            <div class="iu-mc1">Manual</div>
+            <div class="iu-mc1">${loc.t("menu.manual.name")}</div>
             <div class="iu-mc2">
               <input
                 type="text"
                 class="iu-time-input"
                 placeholder="0:00:00"
-                title="Duration"
+                title=${loc.t("menu.manual.hint")}
                 size="8"
                 maxlength="8"
                 required
@@ -679,6 +681,7 @@ h:mm:ss
             <div class="iu-mc3">
               <ha-icon-button
                 icon="mdi:play"
+                title=${loc.t("menu.manual.buttonHint")}
                 @click="${this._serviceManualRun}"
               >
                 <ha-icon icon="mdi:run"></ha-icon>
@@ -688,11 +691,12 @@ h:mm:ss
           <div
             class="iu-menu-item ${(~pauseResume & 1) > 0 ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Pause</div>
+            <div class="iu-mc1">${loc.t("menu.pause.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               <ha-icon-button
                 .disabled=${(~pauseResume & 1) > 0}
+                title=${loc.t("menu.pause.buttonHint")}
                 @click="${this._servicePause}"
               >
                 <ha-icon icon="mdi:pause"></ha-icon>
@@ -702,11 +706,12 @@ h:mm:ss
           <div
             class="iu-menu-item ${(~pauseResume & 2) > 0 ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Resume</div>
+            <div class="iu-mc1">${loc.t("menu.resume.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               <ha-icon-button
                 .disabled=${(~pauseResume & 2) > 0}
+                title=${loc.t("menu.resume.buttonHint")}
                 @click="${this._serviceResume}"
               >
                 <ha-icon icon="mdi:play"></ha-icon>
@@ -714,11 +719,12 @@ h:mm:ss
             </div>
           </div>
           <div class="iu-menu-item ${!allowCancel ? "iu-hidden" : ""}">
-            <div class="iu-mc1">Cancel</div>
+            <div class="iu-mc1">${loc.t("menu.cancel.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               <ha-icon-button
                 .disabled=${!allowCancel}
+                title=${loc.t("menu.cancel.buttonHint")}
                 @click="${this._serviceCancel}"
               >
                 <ha-icon icon="mdi:cancel"></ha-icon>
@@ -728,26 +734,23 @@ h:mm:ss
           <div
             class="iu-menu-item ${adjustment === undefined ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Adjust</div>
+            <div class="iu-mc1">${loc.t("menu.adjust.name")}</div>
             <div class="iu-mc2">
               <input
                 type="text"
                 class="iu-adjust-input"
                 value=${adjustment ?? ""}
-                title="Adjustment options
-===============
-Percentage: %n
-Actual: =0:00:00
-Increase: +0:00:00
-Decrease: -0:00:00
-Reset: <blank>"
+                title=${loc.t("menu.adjust.hint")}
                 size="9"
                 maxlength="9"
                 pattern="^$|^[=+-][0-9]{1,2}:[0-9]{2}:[0-9]{2}$|^%[0-9]*.?[0-9]+$"
               />
             </div>
             <div class="iu-mc3">
-              <ha-icon-button icon="mdi:adjust" @click="${this._serviceAdjust}">
+              <ha-icon-button
+                title=${loc.t("menu.adjust.buttonHint")}
+                @click="${this._serviceAdjust}"
+              >
                 <ha-icon icon="mdi:adjust"></ha-icon>
               </ha-icon-button>
             </div>
@@ -765,6 +768,7 @@ Reset: <blank>"
       <ha-switch
         .checked=${isEnabled}
         .disabled=${isBlocked}
+        title=${loc.t("menu.enable.buttonHint")}
         @change="${this._serviceEnable}"
       ></ha-switch>
     `;

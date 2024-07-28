@@ -9,8 +9,10 @@ import {
 import { customElement, property, state } from "lit/decorators.js";
 import { HomeAssistant } from "./ha-types";
 import { fireEvent } from "./fire_event";
-
 import { IrrigationUnlimitedCardConfig } from "./types";
+import { localise } from "./localize";
+
+const loc = new localise(window.navigator.language);
 
 @customElement("irrigation-unlimited-card-editor")
 export class IrrigationUnlimitedCardEditor extends LitElement {
@@ -53,7 +55,7 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
     return html`
       <div class="iu-editor-row">
         <ha-textfield
-          label="Title (optional)"
+          label=${loc.t("editor.title.name")}
           .value=${this._name}
           .configValue=${"name"}
           @input="${this._valueChanged}"
@@ -61,7 +63,7 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
       </div>
       <div class="iu-editor-row">
         <ha-textfield
-          label="Show controllers (CSV list)"
+          label=${loc.t("editor.showControllers.name")}
           .value=${this._show_controllers}
           .configValue=${"show_controllers"}
           @input="${this._valueChanged}"
@@ -74,7 +76,9 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
           .configValue=${"always_show_zones"}
           @change=${this._valueChanged}
         ></ha-switch>
-        <label for=${this._always_show_zones}>Always show zones</label>
+        <label for=${this._always_show_zones}
+          >${loc.t("editor.alwaysShowZones.name")}</label
+        >
       </div>
       <div class="iu-editor-row">
         <ha-switch
@@ -83,7 +87,9 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
           .configValue=${"always_show_sequences"}
           @change=${this._valueChanged}
         ></ha-switch>
-        <label for=${this._always_show_sequences}>Always show sequences</label>
+        <label for=${this._always_show_sequences}
+          >${loc.t("editor.alwaysShowSequences.name")}</label
+        >
       </div>
       <div class="iu-editor-row">
         <ha-switch
@@ -93,7 +99,7 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
           @change=${this._valueChanged}
         ></ha-switch>
         <label for=${this._show_timeline_scheduled}
-          >Show timeline scheduled</label
+          >${loc.t("editor.showTimelineScheduled.name")}</label
         >
       </div>
       <div class="iu-editor-row">
@@ -103,7 +109,9 @@ export class IrrigationUnlimitedCardEditor extends LitElement {
           .configValue=${"show_timeline_history"}
           @change=${this._valueChanged}
         ></ha-switch>
-        <label for=${this._show_timeline_history}>Show timeline history</label>
+        <label for=${this._show_timeline_history}
+          >${loc.t("editor.showTimelineHistory.name")}</label
+        >
       </div>
     `;
   }

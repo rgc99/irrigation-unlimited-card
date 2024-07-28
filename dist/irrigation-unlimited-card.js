@@ -137,6 +137,139 @@ const fireEvent = (node, type, detail, options) => {
     return event;
 };
 
+var common$1 = {
+	version: "Version",
+	invalidConfiguration: "Invalid configuration"
+};
+var editor = {
+	title: {
+		name: "Title (optional)"
+	},
+	showControllers: {
+		name: "Show controllers (CSV list)"
+	},
+	alwaysShowZones: {
+		name: "Always show zones"
+	},
+	alwaysShowSequences: {
+		name: "Always show sequences"
+	},
+	showTimelineScheduled: {
+		name: "Show timeline sheduled"
+	},
+	showTimelineHistory: {
+		name: "Show timeline history"
+	}
+};
+var controller = {
+	zones: {
+		name: "Zones",
+		buttonHint: "Show/hide zones"
+	},
+	sequences: {
+		name: "Sequences",
+		buttonHint: "Show/hide sequences"
+	}
+};
+var menu = {
+	enable: {
+		name: "Enable"
+	},
+	suspend: {
+		name: "Suspend",
+		hint: "Duration\n===============\nh:mm:ss\n<blank> = reset"
+	},
+	manual: {
+		name: "Manual",
+		hint: "Duration"
+	},
+	pause: {
+		name: "Pause"
+	},
+	resume: {
+		name: "Resume"
+	},
+	cancel: {
+		name: "Cancel"
+	},
+	adjust: {
+		name: "Adjust",
+		hint: "Adjustment options\n===============\nPercentage: %n\nActual: =0:00:00\nIncrease: +0:00:00\nDecrease: -0:00:00\nReset: <blank>"
+	}
+};
+var en = {
+	common: common$1,
+	editor: editor,
+	controller: controller,
+	menu: menu
+};
+
+var en$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    common: common$1,
+    controller: controller,
+    default: en,
+    editor: editor,
+    menu: menu
+});
+
+var common = {
+	version: "Versjon",
+	invalid_configuration: "Ikke gyldig konfiguration"
+};
+var nb = {
+	common: common
+};
+
+var nb$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    common: common,
+    default: nb
+});
+
+const languages = {
+    en: en$1,
+    nb: nb$1,
+};
+class localise {
+    constructor(preferred) {
+        if (!(preferred in languages)) {
+            preferred = preferred.substring(0, 2);
+            if (!(preferred in languages)) {
+                preferred = "en";
+            }
+        }
+        this.lang = preferred;
+    }
+    find(language, keys) {
+        let d = languages[language];
+        for (const k of keys) {
+            d = d[k];
+            if (d === undefined)
+                throw new Error();
+        }
+        return d;
+    }
+    t(key) {
+        const keys = key.split(".");
+        try {
+            return this.find(this.lang, keys);
+        }
+        catch (e) {
+            try {
+                if (this.lang !== "en")
+                    return this.find("en", keys);
+                else
+                    return "";
+            }
+            catch (e) {
+                return "";
+            }
+        }
+    }
+}
+
+const loc$1 = new localise(window.navigator.language);
 let IrrigationUnlimitedCardEditor = class IrrigationUnlimitedCardEditor extends s {
     setConfig(config) {
         this._config = config;
@@ -172,7 +305,7 @@ let IrrigationUnlimitedCardEditor = class IrrigationUnlimitedCardEditor extends 
         return x `
       <div class="iu-editor-row">
         <ha-textfield
-          label="Title (optional)"
+          label=${loc$1.t("editor.title.name")}
           .value=${this._name}
           .configValue=${"name"}
           @input="${this._valueChanged}"
@@ -180,7 +313,7 @@ let IrrigationUnlimitedCardEditor = class IrrigationUnlimitedCardEditor extends 
       </div>
       <div class="iu-editor-row">
         <ha-textfield
-          label="Show controllers (CSV list)"
+          label=${loc$1.t("editor.showControllers.name")}
           .value=${this._show_controllers}
           .configValue=${"show_controllers"}
           @input="${this._valueChanged}"
@@ -193,7 +326,9 @@ let IrrigationUnlimitedCardEditor = class IrrigationUnlimitedCardEditor extends 
           .configValue=${"always_show_zones"}
           @change=${this._valueChanged}
         ></ha-switch>
-        <label for=${this._always_show_zones}>Always show zones</label>
+        <label for=${this._always_show_zones}
+          >${loc$1.t("editor.alwaysShowZones.name")}</label
+        >
       </div>
       <div class="iu-editor-row">
         <ha-switch
@@ -202,7 +337,9 @@ let IrrigationUnlimitedCardEditor = class IrrigationUnlimitedCardEditor extends 
           .configValue=${"always_show_sequences"}
           @change=${this._valueChanged}
         ></ha-switch>
-        <label for=${this._always_show_sequences}>Always show sequences</label>
+        <label for=${this._always_show_sequences}
+          >${loc$1.t("editor.alwaysShowSequences.name")}</label
+        >
       </div>
       <div class="iu-editor-row">
         <ha-switch
@@ -212,7 +349,7 @@ let IrrigationUnlimitedCardEditor = class IrrigationUnlimitedCardEditor extends 
           @change=${this._valueChanged}
         ></ha-switch>
         <label for=${this._show_timeline_scheduled}
-          >Show timeline scheduled</label
+          >${loc$1.t("editor.showTimelineScheduled.name")}</label
         >
       </div>
       <div class="iu-editor-row">
@@ -222,7 +359,9 @@ let IrrigationUnlimitedCardEditor = class IrrigationUnlimitedCardEditor extends 
           .configValue=${"show_timeline_history"}
           @change=${this._valueChanged}
         ></ha-switch>
-        <label for=${this._show_timeline_history}>Show timeline history</label>
+        <label for=${this._show_timeline_history}
+          >${loc$1.t("editor.showTimelineHistory.name")}</label
+        >
       </div>
     `;
     }
@@ -811,61 +950,9 @@ const styles = i$2 `
 
 const CARD_VERSION = '2024.5.0';
 
-var common$1 = {
-	version: "Version",
-	invalid_configuration: "Invalid configuration",
-	show_warning: "Show Warning",
-	show_error: "Show Error"
-};
-var en = {
-	common: common$1
-};
-
-var en$1 = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    common: common$1,
-    default: en
-});
-
-var common = {
-	version: "Versjon",
-	invalid_configuration: "Ikke gyldig konfiguration",
-	show_warning: "Vis advarsel"
-};
-var nb = {
-	common: common
-};
-
-var nb$1 = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    common: common,
-    default: nb
-});
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const languages = {
-    en: en$1,
-    nb: nb$1,
-};
-function localize(string, search = '', replace = '') {
-    const lang = (localStorage.getItem('selectedLanguage') || 'en').replace(/['"]+/g, '').replace('-', '_');
-    let translated;
-    try {
-        translated = string.split('.').reduce((o, i) => o[i], languages[lang]);
-    }
-    catch (e) {
-        translated = string.split('.').reduce((o, i) => o[i], languages['en']);
-    }
-    if (translated === undefined)
-        translated = string.split('.').reduce((o, i) => o[i], languages['en']);
-    if (search !== '' && replace !== '') {
-        translated = translated.replace(search, replace);
-    }
-    return translated;
-}
-
+const loc = new localise(window.navigator.language);
 /* eslint no-console: 0 */
-console.info(`%c  IRRIGATION-UNLIMITED-CARD \n%c  ${localize("common.version")} ${CARD_VERSION}    `, "color: orange; font-weight: bold; background: black", "color: white; font-weight: bold; background: dimgray");
+console.info(`%c  IRRIGATION-UNLIMITED-CARD \n%c  ${loc.t("common.version")} ${CARD_VERSION}    `, "color: orange; font-weight: bold; background: black", "color: white; font-weight: bold; background: dimgray");
 window.customCards = window.customCards || [];
 window.customCards.push({
     type: "irrigation-unlimited-card",
@@ -882,7 +969,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
     }
     setConfig(config) {
         if (!config) {
-            throw new Error(localize("common.invalid_configuration"));
+            throw new Error(loc.t("common.invalidConfiguration"));
         }
         this.config = config;
     }
@@ -1006,19 +1093,21 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
         </div>
         <div class="iu-control-panel">
           <div class="iu-control-panel-item">
-            <label>Zones&nbsp;</label>
+            <label>${loc.t("controller.zones.name")}&nbsp;</label>
             <ha-switch
               .checked="${!zonesHidden}"
               .disabled="${this.config.always_show_zones}"
+              title=${loc.t("controller.zones.buttonHint")}
               @change="${this._toggleZones}"
             >
             </ha-switch>
           </div>
           <div class="iu-control-panel-item">
-            <label>Sequences&nbsp;</label>
+            <label>${loc.t("controller.sequences.name")}&nbsp;</label>
             <ha-switch
               .checked="${!sequencesHidden}"
               .disabled="${this.config.always_show_sequences}"
+              title=${loc.t("controller.sequences.buttonHint")}
               @change="${this._toggleSequences}"
             >
             </ha-switch>
@@ -1403,7 +1492,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
         ></ha-icon>
         <div class="iu-menu-content iu-hidden">
           <div class="iu-menu-item">
-            <div class="iu-mc1">Enable</div>
+            <div class="iu-mc1">${loc.t("menu.enable.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               ${this._renderEnabled(isEnabled, isBlocked)}
@@ -1412,16 +1501,13 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
           <div
             class="iu-menu-item ${suspended === undefined ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Suspend</div>
+            <div class="iu-mc1">${loc.t("menu.suspend.name")}</div>
             <div class="iu-mc2">
               <input
                 type="text"
                 class="iu-time-input"
                 placeholder="h:mm:ss"
-                title="Duration
-===============
-h:mm:ss
-<blank> = reset"
+                title=${loc.t("menu.suspend.hint")}
                 size="8"
                 maxlength="8"
                 required
@@ -1431,6 +1517,7 @@ h:mm:ss
             <div class="iu-mc3">
               <ha-icon-button
                 icon="mdi:timer-outline"
+                title=${loc.t("menu.suspend.buttonHint")}
                 @click="${this._serviceSuspend}"
               >
                 <ha-icon icon="mdi:timer-outline"></ha-icon>
@@ -1438,13 +1525,13 @@ h:mm:ss
             </div>
           </div>
           <div class="iu-menu-item ${!allowManual ? "iu-hidden" : ""}">
-            <div class="iu-mc1">Manual</div>
+            <div class="iu-mc1">${loc.t("menu.manual.name")}</div>
             <div class="iu-mc2">
               <input
                 type="text"
                 class="iu-time-input"
                 placeholder="0:00:00"
-                title="Duration"
+                title=${loc.t("menu.manual.hint")}
                 size="8"
                 maxlength="8"
                 required
@@ -1454,6 +1541,7 @@ h:mm:ss
             <div class="iu-mc3">
               <ha-icon-button
                 icon="mdi:play"
+                title=${loc.t("menu.manual.buttonHint")}
                 @click="${this._serviceManualRun}"
               >
                 <ha-icon icon="mdi:run"></ha-icon>
@@ -1463,11 +1551,12 @@ h:mm:ss
           <div
             class="iu-menu-item ${(~pauseResume & 1) > 0 ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Pause</div>
+            <div class="iu-mc1">${loc.t("menu.pause.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               <ha-icon-button
                 .disabled=${(~pauseResume & 1) > 0}
+                title=${loc.t("menu.pause.buttonHint")}
                 @click="${this._servicePause}"
               >
                 <ha-icon icon="mdi:pause"></ha-icon>
@@ -1477,11 +1566,12 @@ h:mm:ss
           <div
             class="iu-menu-item ${(~pauseResume & 2) > 0 ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Resume</div>
+            <div class="iu-mc1">${loc.t("menu.resume.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               <ha-icon-button
                 .disabled=${(~pauseResume & 2) > 0}
+                title=${loc.t("menu.resume.buttonHint")}
                 @click="${this._serviceResume}"
               >
                 <ha-icon icon="mdi:play"></ha-icon>
@@ -1489,11 +1579,12 @@ h:mm:ss
             </div>
           </div>
           <div class="iu-menu-item ${!allowCancel ? "iu-hidden" : ""}">
-            <div class="iu-mc1">Cancel</div>
+            <div class="iu-mc1">${loc.t("menu.cancel.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
               <ha-icon-button
                 .disabled=${!allowCancel}
+                title=${loc.t("menu.cancel.buttonHint")}
                 @click="${this._serviceCancel}"
               >
                 <ha-icon icon="mdi:cancel"></ha-icon>
@@ -1503,26 +1594,23 @@ h:mm:ss
           <div
             class="iu-menu-item ${adjustment === undefined ? "iu-hidden" : ""}"
           >
-            <div class="iu-mc1">Adjust</div>
+            <div class="iu-mc1">${loc.t("menu.adjust.name")}</div>
             <div class="iu-mc2">
               <input
                 type="text"
                 class="iu-adjust-input"
                 value=${adjustment !== null && adjustment !== void 0 ? adjustment : ""}
-                title="Adjustment options
-===============
-Percentage: %n
-Actual: =0:00:00
-Increase: +0:00:00
-Decrease: -0:00:00
-Reset: <blank>"
+                title=${loc.t("menu.adjust.hint")}
                 size="9"
                 maxlength="9"
                 pattern="^$|^[=+-][0-9]{1,2}:[0-9]{2}:[0-9]{2}$|^%[0-9]*.?[0-9]+$"
               />
             </div>
             <div class="iu-mc3">
-              <ha-icon-button icon="mdi:adjust" @click="${this._serviceAdjust}">
+              <ha-icon-button
+                title=${loc.t("menu.adjust.buttonHint")}
+                @click="${this._serviceAdjust}"
+              >
                 <ha-icon icon="mdi:adjust"></ha-icon>
               </ha-icon-button>
             </div>
@@ -1536,6 +1624,7 @@ Reset: <blank>"
       <ha-switch
         .checked=${isEnabled}
         .disabled=${isBlocked}
+        title=${loc.t("menu.enable.buttonHint")}
         @change="${this._serviceEnable}"
       ></ha-switch>
     `;

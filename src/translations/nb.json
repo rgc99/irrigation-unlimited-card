@@ -1,0 +1,6 @@
+{
+  "common": {
+    "version": "Versjon",
+    "invalid_configuration": "Ikke gyldig konfiguration"
+  }
+}
