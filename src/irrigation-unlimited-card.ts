@@ -39,7 +39,7 @@ export class IrrigationUnlimitedCard extends LitElement {
   @property({ attribute: false }) public hass!: HomeAssistant;
   @state() private config!: IrrigationUnlimitedCardConfig;
 
-  iu_coordinator = new IUCoordinator(this);
+  private iu_coordinator = new IUCoordinator(this);
 
   public static async getConfigElement(): Promise<LovelaceCardEditor> {
     return document.createElement("irrigation-unlimited-card-editor");
