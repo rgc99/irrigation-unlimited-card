@@ -8,7 +8,7 @@
     "showControllers": { "name": "Show controllers (CSV list)" },
     "alwaysShowZones": { "name": "Always show zones" },
     "alwaysShowSequences": { "name": "Always show sequences" },
-    "showTimelineScheduled": { "name": "Show timeline sheduled" },
+    "showTimelineScheduled": { "name": "Show timeline scheduled" },
     "showTimelineHistory": { "name": "Show timeline history" }
   },
   "controller": {
