@@ -192,7 +192,7 @@ export class IrrigationUnlimitedCard extends LitElement {
           </div>
         </div>
         <div class="iu-control-panel">
-          <div class="iu-control-panel-item">
+          <div class="iu-control-panel-item iu-show-zones">
             <label>${loc.t("controller.zones.name")}&nbsp;</label>
             <ha-switch
               .checked="${!zonesHidden}"
@@ -202,7 +202,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             >
             </ha-switch>
           </div>
-          <div class="iu-control-panel-item">
+          <div class="iu-control-panel-item iu-show-sequences">
             <label>${loc.t("controller.sequences.name")}&nbsp;</label>
             <ha-switch
               .checked="${!sequencesHidden}"
