@@ -631,7 +631,7 @@ export class IrrigationUnlimitedCard extends LitElement {
           @click="${this._toggleMenu}"
         ></ha-icon>
         <div class="iu-menu-content iu-hidden">
-          <div class="iu-menu-item">
+          <div class="iu-menu-item iu-enable">
             <div class="iu-mc1">${loc.t("menu.enable.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
@@ -639,7 +639,9 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div
-            class="iu-menu-item ${suspended === undefined ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-suspend ${suspended === undefined
+              ? "iu-hidden"
+              : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.suspend.name")}</div>
             <div class="iu-mc2">
@@ -664,7 +666,9 @@ export class IrrigationUnlimitedCard extends LitElement {
               </ha-icon-button>
             </div>
           </div>
-          <div class="iu-menu-item ${!allowManual ? "iu-hidden" : ""}">
+          <div
+            class="iu-menu-item iu-manual ${!allowManual ? "iu-hidden" : ""}"
+          >
             <div class="iu-mc1">${loc.t("menu.manual.name")}</div>
             <div class="iu-mc2">
               <input
@@ -689,7 +693,9 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div
-            class="iu-menu-item ${(~pauseResume & 1) > 0 ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-pause ${(~pauseResume & 1) > 0
+              ? "iu-hidden"
+              : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.pause.name")}</div>
             <div class="iu-mc2"></div>
@@ -704,7 +710,9 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div
-            class="iu-menu-item ${(~pauseResume & 2) > 0 ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-resume ${(~pauseResume & 2) > 0
+              ? "iu-hidden"
+              : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.resume.name")}</div>
             <div class="iu-mc2"></div>
@@ -718,7 +726,9 @@ export class IrrigationUnlimitedCard extends LitElement {
               </ha-icon-button>
             </div>
           </div>
-          <div class="iu-menu-item ${!allowCancel ? "iu-hidden" : ""}">
+          <div
+            class="iu-menu-item iu-cancel ${!allowCancel ? "iu-hidden" : ""}"
+          >
             <div class="iu-mc1">${loc.t("menu.cancel.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
@@ -732,7 +742,9 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div
-            class="iu-menu-item ${adjustment === undefined ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-adjust ${adjustment === undefined
+              ? "iu-hidden"
+              : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.adjust.name")}</div>
             <div class="iu-mc2">
