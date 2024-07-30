@@ -155,7 +155,7 @@ var editor = {
 		name: "Always show sequences"
 	},
 	showTimelineScheduled: {
-		name: "Show timeline sheduled"
+		name: "Show timeline scheduled"
 	},
 	showTimelineHistory: {
 		name: "Show timeline history"
@@ -1000,18 +1000,23 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
         id="iu-card"
         @click="${this._clickNet}"
       >
-        <div class="iu-header-row iu-td">
-          <div class="iu-td1"></div>
-          <div class="iu-td2"></div>
-          <div class="iu-td3"></div>
-          <div class="iu-td4"><ha-icon icon="mdi:clock-outline"></ha-icon></div>
-          <div class="iu-td5"><ha-icon icon="mdi:timer-sand"></ha-icon></div>
-          <div class="iu-td6"><ha-icon icon="mdi:delta"></ha-icon></div>
-          <div class="iu-td7"><ha-icon icon="mdi:menu"></ha-icon></div>
+        <div class="iu-header">
+          <div class="iu-header-row iu-td">
+            <div class="iu-td1"></div>
+            <div class="iu-td2"></div>
+            <div class="iu-td3"></div>
+            <div class="iu-td4">
+              <ha-icon icon="mdi:clock-outline"></ha-icon>
+            </div>
+            <div class="iu-td5"><ha-icon icon="mdi:timer-sand"></ha-icon></div>
+            <div class="iu-td6"><ha-icon icon="mdi:delta"></ha-icon></div>
+            <div class="iu-td7"><ha-icon icon="mdi:menu"></ha-icon></div>
+          </div>
         </div>
         <div class="iu-controllers">
           ${this.iu_coordinator.controllers.map((controller) => this._renderController(controller))}
         </div>
+        <div class="iu-footer"></div>
       </ha-card>
     `;
     }
@@ -1047,7 +1052,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             schedule_name = stateObj.attributes.next_name;
         }
         const startStr = date_to_str(start);
-        const classes = ["iu-controller iu-object"];
+        const classes = ["iu-controller", "iu-object"];
         if (isHidden)
             classes.push("iu-hidden");
         if (isOn)
@@ -1092,7 +1097,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
           </div>
         </div>
         <div class="iu-control-panel">
-          <div class="iu-control-panel-item">
+          <div class="iu-control-panel-item iu-show-zones">
             <label>${loc.t("controller.zones.name")}&nbsp;</label>
             <ha-switch
               .checked="${!zonesHidden}"
@@ -1102,7 +1107,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             >
             </ha-switch>
           </div>
-          <div class="iu-control-panel-item">
+          <div class="iu-control-panel-item iu-show-sequences">
             <label>${loc.t("controller.sequences.name")}&nbsp;</label>
             <ha-switch
               .checked="${!sequencesHidden}"
@@ -1159,7 +1164,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
         }
         const isManual = schedule_index === 0;
         const startStr = date_to_str(start);
-        const classes = ["iu-zone iu-object"];
+        const classes = ["iu-zone", "iu-object"];
         if (isOn)
             classes.push("iu-on");
         if (isEnabled)
@@ -1261,7 +1266,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             minute: "2-digit",
             hour12: false,
         });
-        const classes = ["iu-zone-timeline iu-object"];
+        const classes = ["iu-zone-timeline", "iu-object"];
         let icon = "";
         if (timeline.status === "history") {
             classes.push("iu-timeline-history");
@@ -1333,7 +1338,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
         const isManual = schedule_index === 0;
         const isRunning = sequence.remaining !== undefined;
         const startStr = date_to_str(start);
-        const classes = ["iu-sequence iu-object"];
+        const classes = ["iu-sequence", "iu-object"];
         if (isOn)
             classes.push("iu-on");
         if (isPaused)
@@ -1422,7 +1427,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             const start = new Date(suspended);
             startStr = date_to_str(start);
         }
-        const classes = ["iu-sequence-zone iu-object"];
+        const classes = ["iu-sequence-zone", "iu-object"];
         if (isOn)
             classes.push("iu-on");
         if (isEnabled)
@@ -1491,7 +1496,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
           @click="${this._toggleMenu}"
         ></ha-icon>
         <div class="iu-menu-content iu-hidden">
-          <div class="iu-menu-item">
+          <div class="iu-menu-item iu-enable">
             <div class="iu-mc1">${loc.t("menu.enable.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
@@ -1499,7 +1504,9 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             </div>
           </div>
           <div
-            class="iu-menu-item ${suspended === undefined ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-suspend ${suspended === undefined
+            ? "iu-hidden"
+            : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.suspend.name")}</div>
             <div class="iu-mc2">
@@ -1524,7 +1531,9 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
               </ha-icon-button>
             </div>
           </div>
-          <div class="iu-menu-item ${!allowManual ? "iu-hidden" : ""}">
+          <div
+            class="iu-menu-item iu-manual ${!allowManual ? "iu-hidden" : ""}"
+          >
             <div class="iu-mc1">${loc.t("menu.manual.name")}</div>
             <div class="iu-mc2">
               <input
@@ -1549,7 +1558,9 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             </div>
           </div>
           <div
-            class="iu-menu-item ${(~pauseResume & 1) > 0 ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-pause ${(~pauseResume & 1) > 0
+            ? "iu-hidden"
+            : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.pause.name")}</div>
             <div class="iu-mc2"></div>
@@ -1564,7 +1575,9 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             </div>
           </div>
           <div
-            class="iu-menu-item ${(~pauseResume & 2) > 0 ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-resume ${(~pauseResume & 2) > 0
+            ? "iu-hidden"
+            : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.resume.name")}</div>
             <div class="iu-mc2"></div>
@@ -1578,7 +1591,9 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
               </ha-icon-button>
             </div>
           </div>
-          <div class="iu-menu-item ${!allowCancel ? "iu-hidden" : ""}">
+          <div
+            class="iu-menu-item iu-cancel ${!allowCancel ? "iu-hidden" : ""}"
+          >
             <div class="iu-mc1">${loc.t("menu.cancel.name")}</div>
             <div class="iu-mc2"></div>
             <div class="iu-mc3">
@@ -1592,7 +1607,9 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             </div>
           </div>
           <div
-            class="iu-menu-item ${adjustment === undefined ? "iu-hidden" : ""}"
+            class="iu-menu-item iu-adjust ${adjustment === undefined
+            ? "iu-hidden"
+            : ""}"
           >
             <div class="iu-mc1">${loc.t("menu.adjust.name")}</div>
             <div class="iu-mc2">

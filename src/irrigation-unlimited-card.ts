@@ -88,20 +88,25 @@ export class IrrigationUnlimitedCard extends LitElement {
         id="iu-card"
         @click="${this._clickNet}"
       >
-        <div class="iu-header-row iu-td">
-          <div class="iu-td1"></div>
-          <div class="iu-td2"></div>
-          <div class="iu-td3"></div>
-          <div class="iu-td4"><ha-icon icon="mdi:clock-outline"></ha-icon></div>
-          <div class="iu-td5"><ha-icon icon="mdi:timer-sand"></ha-icon></div>
-          <div class="iu-td6"><ha-icon icon="mdi:delta"></ha-icon></div>
-          <div class="iu-td7"><ha-icon icon="mdi:menu"></ha-icon></div>
+        <div class="iu-header">
+          <div class="iu-header-row iu-td">
+            <div class="iu-td1"></div>
+            <div class="iu-td2"></div>
+            <div class="iu-td3"></div>
+            <div class="iu-td4">
+              <ha-icon icon="mdi:clock-outline"></ha-icon>
+            </div>
+            <div class="iu-td5"><ha-icon icon="mdi:timer-sand"></ha-icon></div>
+            <div class="iu-td6"><ha-icon icon="mdi:delta"></ha-icon></div>
+            <div class="iu-td7"><ha-icon icon="mdi:menu"></ha-icon></div>
+          </div>
         </div>
         <div class="iu-controllers">
           ${this.iu_coordinator.controllers.map((controller) =>
             this._renderController(controller)
           )}
         </div>
+        <div class="iu-footer"></div>
       </ha-card>
     `;
   }
@@ -143,7 +148,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     }
     const startStr = date_to_str(start);
 
-    const classes: Array<string> = ["iu-controller iu-object"];
+    const classes: string[] = ["iu-controller", "iu-object"];
     if (isHidden) classes.push("iu-hidden");
     if (isOn) classes.push("iu-on");
     if (isEnabled) classes.push("iu-enabled");
@@ -261,7 +266,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     }
     const isManual = schedule_index === 0;
     const startStr = date_to_str(start);
-    const classes: Array<string> = ["iu-zone iu-object"];
+    const classes: string[] = ["iu-zone", "iu-object"];
     if (isOn) classes.push("iu-on");
     if (isEnabled) classes.push("iu-enabled");
     if (suspended) classes.push("iu-suspended");
@@ -368,7 +373,7 @@ export class IrrigationUnlimitedCard extends LitElement {
       minute: "2-digit",
       hour12: false,
     });
-    const classes: Array<string> = ["iu-zone-timeline iu-object"];
+    const classes: string[] = ["iu-zone-timeline", "iu-object"];
     let icon: String = "";
     if (timeline.status === "history") {
       classes.push("iu-timeline-history");
@@ -441,7 +446,7 @@ export class IrrigationUnlimitedCard extends LitElement {
     const isManual = schedule_index === 0;
     const isRunning = sequence.remaining !== undefined;
     const startStr = date_to_str(start);
-    const classes: Array<string> = ["iu-sequence iu-object"];
+    const classes: string[] = ["iu-sequence", "iu-object"];
     if (isOn) classes.push("iu-on");
     if (isPaused) classes.push("iu-paused");
     if (isDelay) classes.push("iu-delay");
@@ -538,7 +543,7 @@ export class IrrigationUnlimitedCard extends LitElement {
       const start = new Date(suspended);
       startStr = date_to_str(start);
     }
-    const classes: Array<string> = ["iu-sequence-zone iu-object"];
+    const classes: string[] = ["iu-sequence-zone", "iu-object"];
     if (isOn) classes.push("iu-on");
     if (isEnabled) classes.push("iu-enabled");
     if (suspended) classes.push("iu-suspended");
