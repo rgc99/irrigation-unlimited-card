@@ -1163,6 +1163,8 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             adjustment = stateObj.attributes.next_adjustment;
         }
         const isManual = schedule_index === 0;
+        if (isManual)
+            schedule_name = loc.t("menu.manual.name");
         const startStr = date_to_str(start);
         const classes = ["iu-zone", "iu-object"];
         if (isOn)
@@ -1284,6 +1286,11 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             classes.push("iu-timeline-running");
             icon = "mdi:play";
         }
+        let schedule_name;
+        if (timeline.schedule !== 0)
+            schedule_name = timeline.schedule_name;
+        else
+            schedule_name = loc.t("menu.manual.name");
         return x `
       <div class=${classes.join(" ")}>
         <div class="iu-timeline-row iu-td">
@@ -1292,7 +1299,7 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             <ha-icon icon=${icon}></ha-icon>
           </div>
           <div class="iu-td3">${startStr}</div>
-          <div class="iu-td4 iu-schedule">${timeline.schedule_name}</div>
+          <div class="iu-td4 iu-schedule">${schedule_name}</div>
           <div class="iu-td5 iu-duration">${duration}</div>
           <div class="iu-td6 iu-adjustment">${timeline.adjustment}</div>
           <div class="iu-td7"></div>
@@ -1336,6 +1343,8 @@ let IrrigationUnlimitedCard = class IrrigationUnlimitedCard extends s {
             adjustment = stateObj.attributes.adjustment;
         }
         const isManual = schedule_index === 0;
+        if (isManual)
+            schedule_name = loc.t("menu.manual.name");
         const isRunning = sequence.remaining !== undefined;
         const startStr = date_to_str(start);
         const classes = ["iu-sequence", "iu-object"];

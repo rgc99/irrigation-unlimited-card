@@ -192,6 +192,7 @@ export class IUSequenceZone extends IUBase {
 export interface IUTimeline {
   start: string;
   end: string;
+  schedule: number;
   schedule_name: string;
   adjustment: string;
   status: string;
