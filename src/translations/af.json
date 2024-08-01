@@ -1,0 +1,39 @@
+{
+  "common": {
+    "version": "Weergawe",
+    "invalidConfiguration": "Ongeldige konfigurasie"
+  },
+  "editor": {
+    "title": { "name": "Titel (opsioneel)" },
+    "showControllers": { "name": "Wys beheerders (CSV lys)" },
+    "alwaysShowZones": { "name": "Wys altyd sones" },
+    "alwaysShowSequences": { "name": "Wys altyd volgordes" },
+    "showTimelineScheduled": { "name": "Wys geskeduleerde tydslyn" },
+    "showTimelineHistory": { "name": "Wys tydslyn geskiedenis" }
+  },
+  "controller": {
+    "zones": {
+      "name": "Sones",
+      "buttonHint": "Wys/verberg sones"
+    },
+    "sequences": {
+      "name": "Volgordes",
+      "buttonHint": "Wys/versteek volgordes"
+    }
+  },
+  "menu": {
+    "enable": { "name": "Aktiveer" },
+    "suspend": {
+      "name": "Opskort",
+      "hint": "Duur\n===============\nh:mm:ss\n<blank> = herstel"
+    },
+    "manual": { "name": "Handmatig", "hint": "Duur" },
+    "pause": { "name": "Wag" },
+    "resume": { "name": "Hervat" },
+    "cancel": { "name": "Kanselleer" },
+    "adjust": {
+      "name": "Aanpas",
+      "hint": "Aanpassingsopsies\n===============\nPersentasie: %n\nWerklike: =0:00:00\nToename: +0:00:00\nAfname: -0:00:00\nHerstel: <blank>"
+    }
+  }
+}
