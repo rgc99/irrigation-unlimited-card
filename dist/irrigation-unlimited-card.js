@@ -137,6 +137,158 @@ const fireEvent = (node, type, detail, options) => {
     return event;
 };
 
+var common$3 = {
+	version: "Weergawe",
+	invalidConfiguration: "Ongeldige konfigurasie"
+};
+var editor$2 = {
+	title: {
+		name: "Titel (opsioneel)"
+	},
+	showControllers: {
+		name: "Wys beheerders (CSV lys)"
+	},
+	alwaysShowZones: {
+		name: "Wys altyd sones"
+	},
+	alwaysShowSequences: {
+		name: "Wys altyd volgordes"
+	},
+	showTimelineScheduled: {
+		name: "Wys geskeduleerde tydslyn"
+	},
+	showTimelineHistory: {
+		name: "Wys tydslyn geskiedenis"
+	}
+};
+var controller$2 = {
+	zones: {
+		name: "Sones",
+		buttonHint: "Wys/verberg sones"
+	},
+	sequences: {
+		name: "Volgordes",
+		buttonHint: "Wys/versteek volgordes"
+	}
+};
+var menu$2 = {
+	enable: {
+		name: "Aktiveer"
+	},
+	suspend: {
+		name: "Opskort",
+		hint: "Duur\n===============\nh:mm:ss\n<blank> = herstel"
+	},
+	manual: {
+		name: "Handmatig",
+		hint: "Duur"
+	},
+	pause: {
+		name: "Wag"
+	},
+	resume: {
+		name: "Hervat"
+	},
+	cancel: {
+		name: "Kanselleer"
+	},
+	adjust: {
+		name: "Aanpas",
+		hint: "Aanpassingsopsies\n===============\nPersentasie: %n\nWerklike: =0:00:00\nToename: +0:00:00\nAfname: -0:00:00\nHerstel: <blank>"
+	}
+};
+var af = {
+	common: common$3,
+	editor: editor$2,
+	controller: controller$2,
+	menu: menu$2
+};
+
+var af$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    common: common$3,
+    controller: controller$2,
+    default: af,
+    editor: editor$2,
+    menu: menu$2
+});
+
+var common$2 = {
+	version: "Version",
+	invalidConfiguration: "Ungültige Konfiguration"
+};
+var editor$1 = {
+	title: {
+		name: "Title (optional)"
+	},
+	showControllers: {
+		name: "Zeige Controller (CSV list)"
+	},
+	alwaysShowZones: {
+		name: "Zeige Zonen immer an"
+	},
+	alwaysShowSequences: {
+		name: "Zeige Sequenzen immer an"
+	},
+	showTimelineScheduled: {
+		name: "Zeige geplante Ablaufpläne"
+	},
+	showTimelineHistory: {
+		name: "Zeige vergangene Ablaufpläne"
+	}
+};
+var controller$1 = {
+	zones: {
+		name: "Zonen",
+		buttonHint: "Ein/Ausblenden der Zonen"
+	},
+	sequences: {
+		name: "Sequenzen",
+		buttonHint: "Ein/Ausblenden der Sequenzen"
+	}
+};
+var menu$1 = {
+	enable: {
+		name: "Aktivieren"
+	},
+	suspend: {
+		name: "Pausieren",
+		hint: "Dauer\n===============\nh:mm:ss\n<blank> = reset"
+	},
+	manual: {
+		name: "Manuell",
+		hint: "Dauer"
+	},
+	pause: {
+		name: "Pause"
+	},
+	resume: {
+		name: "Fortsetzen"
+	},
+	cancel: {
+		name: "Abbrechen"
+	},
+	adjust: {
+		name: "Anpassen",
+		hint: "Anpassungs Optionen\n===============\nProzent: %n\nAktuell: =0:00:00\nErhöhen: +0:00:00\nVerringern -0:00:00\nReset: <blank>"
+	}
+};
+var de = {
+	common: common$2,
+	editor: editor$1,
+	controller: controller$1,
+	menu: menu$1
+};
+
+var de$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    common: common$2,
+    controller: controller$1,
+    default: de,
+    editor: editor$1,
+    menu: menu$1
+});
+
 var common$1 = {
 	version: "Version",
 	invalidConfiguration: "Invalid configuration"
@@ -228,6 +380,8 @@ var nb$1 = /*#__PURE__*/Object.freeze({
 });
 
 const languages = {
+    af: af$1,
+    de: de$1,
     en: en$1,
     nb: nb$1,
 };

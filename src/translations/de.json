@@ -1,0 +1,39 @@
+{
+  "common": {
+    "version": "Version",
+    "invalidConfiguration": "Ungültige Konfiguration"
+  },
+  "editor": {
+    "title": { "name": "Title (optional)" },
+    "showControllers": { "name": "Zeige Controller (CSV list)" },
+    "alwaysShowZones": { "name": "Zeige Zonen immer an" },
+    "alwaysShowSequences": { "name": "Zeige Sequenzen immer an" },
+    "showTimelineScheduled": { "name": "Zeige geplante Ablaufpläne" },
+    "showTimelineHistory": { "name": "Zeige vergangene Ablaufpläne" }
+  },
+  "controller": {
+    "zones": {
+      "name": "Zonen",
+      "buttonHint": "Ein/Ausblenden der Zonen"
+    },
+    "sequences": {
+      "name": "Sequenzen",
+      "buttonHint": "Ein/Ausblenden der Sequenzen"
+    }
+  },
+  "menu": {
+    "enable": { "name": "Aktivieren" },
+    "suspend": {
+      "name": "Pausieren",
+      "hint": "Dauer\n===============\nh:mm:ss\n<blank> = reset"
+    },
+    "manual": { "name": "Manuell", "hint": "Dauer" },
+    "pause": { "name": "Pause" },
+    "resume": { "name": "Fortsetzen" },
+    "cancel": { "name": "Abbrechen" },
+    "adjust": {
+      "name": "Anpassen",
+      "hint": "Anpassungs Optionen\n===============\nProzent: %n\nAktuell: =0:00:00\nErhöhen: +0:00:00\nVerringern -0:00:00\nReset: <blank>"
+    }
+  }
+}

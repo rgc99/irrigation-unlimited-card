@@ -1,7 +1,11 @@
+import * as af from "./translations/af.json";
+import * as de from "./translations/de.json";
 import * as en from "./translations/en.json";
 import * as nb from "./translations/nb.json";
 
 const languages = {
+  af: af,
+  de: de,
   en: en,
   nb: nb,
 };
