@@ -46,7 +46,7 @@ This section is for people wanting to use [YAML](https://yaml.org) to edit the c
 | ----------------------- | ------- | ------------ | ------------------------------------------ | ---------------------- |
 | type                    | string  | **Required** | `custom:irrigation-unlimited-card`         |                        |
 | name                    | string  | **Optional** | Card name                                  | `Irrigation Unlimited` |
-| controllers             | string  | **Optional** | CSV list of controllers to display         |                        |
+| show_controllers        | string  | **Optional** | CSV list of controllers to display         |                        |
 | always_show_zones       | boolean | **Optional** | Force the zones to always be displayed     | false                  |
 | always_show_sequences   | boolean | **Optional** | Force the sequences to always be displayed | false                  |
 | show_timeline_scheduled | boolean | **Optional** | Show scheduled items in the timeline       | true                   |

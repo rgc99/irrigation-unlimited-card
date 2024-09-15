@@ -124,7 +124,7 @@ export class IrrigationUnlimitedCard extends LitElement {
         this.config.show_controllers
           ?.replace(/\s/g, "")
           .split(",")
-          .includes(controller.id1 + ""))
+          .includes(controller.controller_id))
     );
     const zonesHidden = !this.config.always_show_zones;
     const sequencesHidden = !this.config.always_show_sequences;
