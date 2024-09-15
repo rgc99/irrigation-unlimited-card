@@ -37,3 +37,9 @@ export function elapsed_secs(d1: Date, d2: Date): number {
 export function percent_completed(elapsed: number, total: number): number {
   return Math.round((elapsed / total) * 100);
 }
+
+export function humanise_adjustment(value: string): string {
+  if (value && value.length > 0 && value[0] === "%")
+    return value.substring(1) + "%";
+  return value;
+}

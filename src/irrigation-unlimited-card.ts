@@ -17,7 +17,7 @@ import type {
   LovelaceCardEditor,
 } from "./types";
 import { CARD_VERSION } from "./const";
-import { date_to_str } from "./util";
+import { date_to_str, humanise_adjustment } from "./util";
 import { localise } from "./localize";
 
 const loc = new localise(window.navigator.language);
@@ -336,7 +336,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
             <div class="iu-td6 iu-adjustment">
               <div ?hidden=${!isEnabled || isBlocked || suspended || isManual}>
-                ${adjustment}
+                ${humanise_adjustment(adjustment)}
               </div>
             </div>
             <div class="iu-td7">
@@ -403,7 +403,9 @@ export class IrrigationUnlimitedCard extends LitElement {
           <div class="iu-td3">${startStr}</div>
           <div class="iu-td4 iu-schedule">${schedule_name}</div>
           <div class="iu-td5 iu-duration">${duration}</div>
-          <div class="iu-td6 iu-adjustment">${timeline.adjustment}</div>
+          <div class="iu-td6 iu-adjustment">
+            ${humanise_adjustment(timeline.adjustment)}
+          </div>
           <div class="iu-td7"></div>
         </div>
       </div>
@@ -497,7 +499,7 @@ export class IrrigationUnlimitedCard extends LitElement {
               </div>
             </div>
             <div class="iu-td6 iu-adjustment">
-              <div ?hidden=${isManual}>${adjustment}</div>
+              <div ?hidden=${isManual}>${humanise_adjustment(adjustment)}</div>
             </div>
             <div class="iu-td7">
               ${this._renderMenu(
@@ -589,7 +591,9 @@ export class IrrigationUnlimitedCard extends LitElement {
             </div>
           </div>
           <div class="iu-td6 iu-adjustment">
-            <div ?hidden=${isManual}>${sequenceZone.adjustment}</div>
+            <div ?hidden=${isManual}>
+              ${humanise_adjustment(sequenceZone.adjustment ?? "")}
+            </div>
           </div>
           <div class="iu-td7">
             ${this._renderMenu(
