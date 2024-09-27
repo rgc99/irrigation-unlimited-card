@@ -1,0 +1,39 @@
+{
+  "common": {
+    "version": "Verzia",
+    "invalidConfiguration": "Chybná konfigurácia"
+  },
+  "editor": {
+    "title": { "name": "Názov (voliteľné)" },
+    "showControllers": { "name": "Ukázať ovládače (CSV zoznam)" },
+    "alwaysShowZones": { "name": "Vždy zobraziť zóny" },
+    "alwaysShowSequences": { "name": "Vždy zobrazovať sekvencie" },
+    "showTimelineScheduled": { "name": "Zobraziť naplánovanú časovú os" },
+    "showTimelineHistory": { "name": "Zobraziť históriu časovej osi" }
+  },
+  "controller": {
+    "zones": {
+      "name": "Zóny",
+      "buttonHint": "Zobraziť/skryť zóny"
+    },
+    "sequences": {
+      "name": "Sekvencie",
+      "buttonHint": "Zobraziť/skryť sekvencie"
+    }
+  },
+  "menu": {
+    "enable": { "name": "Povoliť" },
+    "suspend": {
+      "name": "Pozastaviť",
+      "hint": "Trvanie\n===============\nh:mm:ss\n<blank> = reset"
+    },
+    "manual": { "name": "Manual", "hint": "Trvanie" },
+    "pause": { "name": "Pauza" },
+    "resume": { "name": "Obnoviť" },
+    "cancel": { "name": "Zrušiť" },
+    "adjust": {
+      "name": "Upraviť",
+      "hint": "Možnosti úprav\n===============\nPercento: %n\nAktuálne: =0:00:00\nZvýšiť: +0:00:00\nZnížiť: -0:00:00\nReset: <blank>"
+    }
+  }
+}
