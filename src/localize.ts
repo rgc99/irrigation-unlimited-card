@@ -2,12 +2,14 @@ import * as af from "./translations/af.json";
 import * as de from "./translations/de.json";
 import * as en from "./translations/en.json";
 import * as nb from "./translations/nb.json";
+import * as sk from "./translations/sk.json";
 
 const languages = {
   af: af,
   de: de,
   en: en,
   nb: nb,
+  sk: sk,
 };
 
 export class localise {
