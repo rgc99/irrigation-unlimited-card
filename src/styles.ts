@@ -75,16 +75,19 @@ export const styles = css`
   .iu-td2 {
     flex: 30px;
     text-align: center;
+    cursor: pointer;
   }
 
   .iu-td3 {
     flex: 40%;
     text-align: left;
+    cursor: pointer;
   }
 
   .iu-td4 {
     flex: 20%;
     text-align: center;
+    cursor: pointer;
   }
 
   .iu-td5 {

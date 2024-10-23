@@ -19,6 +19,13 @@ import type {
 import { CARD_VERSION } from "./const";
 import { date_to_str, humanise_adjustment } from "./util";
 import { localise } from "./localize";
+import { fireEvent, HASSDomEvent } from "./fire_event";
+
+declare global {
+  interface HASSDomEvents {
+    "hass-more-info": {};
+  }
+}
 
 const loc = new localise(window.navigator.language);
 
@@ -173,7 +180,7 @@ export class IrrigationUnlimitedCard extends LitElement {
             <span>${controller.id1}</span>
             <span class="iu-name">${controller.name}</span>
           </div>
-          <div class="iu-td4">
+          <div class="iu-td4" @click="${this._moreInfo}">
             <div ?hidden=${!isEnabled}>
               <span class="iu-schedule">${schedule_name}</span>
               <br ?hidden=${isOn || suspended} />
@@ -320,7 +327,7 @@ export class IrrigationUnlimitedCard extends LitElement {
               >
               <span class="iu-name">${stateObj.attributes.friendly_name}</span>
             </div>
-            <div class="iu-td4">
+            <div class="iu-td4" @click="${this._moreInfo}">
               <div ?hidden=${!isEnabled || isBlocked}>
                 <span class="iu-schedule">${schedule_name}</span>
                 <br ?hidden=${isOn || isManual || suspended} />
@@ -484,7 +491,7 @@ export class IrrigationUnlimitedCard extends LitElement {
               <span>${sequence.id1}</span>
               <span class="iu-name">${sequence.name}</span>
             </div>
-            <div class="iu-td4">
+            <div class="iu-td4" @click="${this._moreInfo}">
               <div ?hidden=${!isEnabled || isBlocked}>
                 <span class="iu-schedule">${schedule_name}</span>
                 <br ?hidden=${isOn || isPaused || isDelay || suspended} />
@@ -889,6 +896,14 @@ export class IrrigationUnlimitedCard extends LitElement {
       data["zones"] = Number(keys[3]);
     }
     return data;
+  }
+
+  private _moreInfo(e: Event): void {
+    const keys = this._get_iu_key(e);
+    if (!keys) return;
+
+    const entity_id = this._build_entity_id(keys);
+    fireEvent(this, "hass-more-info", { entityId: entity_id, view: "history" });
   }
 
   private _serviceEnable(e: Event): void {
