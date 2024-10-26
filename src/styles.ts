@@ -69,25 +69,21 @@ export const styles = css`
   .iu-td1 {
     flex: 1.5em;
     text-align: center;
-    cursor: pointer;
   }
 
   .iu-td2 {
     flex: 30px;
     text-align: center;
-    cursor: pointer;
   }
 
   .iu-td3 {
     flex: 40%;
     text-align: left;
-    cursor: pointer;
   }
 
   .iu-td4 {
     flex: 20%;
     text-align: center;
-    cursor: pointer;
   }
 
   .iu-td5 {
@@ -103,6 +99,27 @@ export const styles = css`
   .iu-td7 {
     flex: 10%;
     text-align: center;
+  }
+
+  /* Cursors */
+  .iu-collapsible > .iu-td > .iu-td1,
+  .iu-collapsible > .iu-td > .iu-td2,
+  .iu-collapsible > .iu-td > .iu-td3 {
+    cursor: pointer;
+  }
+
+  .iu-controller-row .iu-td4,
+  .iu-zone-row .iu-td4,
+  .iu-sequence-row .iu-td4 {
+    cursor: pointer;
+  }
+
+  .iu-controller-row > .iu-td3,
+  .iu-timeline-row,
+  .iu-sequence-zone-row,
+  .iu-duration,
+  .iu-adjustment {
+    cursor: default;
   }
 
   /* Timeline colouring */
