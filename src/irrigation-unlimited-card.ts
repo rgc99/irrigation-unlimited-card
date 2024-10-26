@@ -186,6 +186,7 @@ export class IrrigationUnlimitedCard extends LitElement {
               <br ?hidden=${isOn || suspended} />
               <span class="iu-start" ?hidden=${isOn}>${startStr}</span>
             </div>
+            <div ?hidden=${isEnabled}>&nbsp;</div>
           </div>
           <div class="iu-td5 iu-duration">
             <div ?hidden=${!isEnabled}>${duration}</div>
@@ -335,6 +336,7 @@ export class IrrigationUnlimitedCard extends LitElement {
                   >${startStr}</span
                 >
               </div>
+              <div ?hidden=${!(!isEnabled || isBlocked)}>&nbsp;</div>
             </div>
             <div class="iu-td5 iu-duration">
               <div ?hidden=${!isEnabled || suspended || isBlocked}>
@@ -499,6 +501,7 @@ export class IrrigationUnlimitedCard extends LitElement {
                   >${startStr}</span
                 >
               </div>
+              <div ?hidden=${!(!isEnabled || isBlocked)}>&nbsp;</div>
             </div>
             <div class="iu-td5 iu-duration">
               <div ?hidden=${!isEnabled || suspended || isBlocked}>
