@@ -3,6 +3,7 @@ import * as de from "./translations/de.json";
 import * as en from "./translations/en.json";
 import * as nb from "./translations/nb.json";
 import * as sk from "./translations/sk.json";
+import * as hu from "./translations/hu.json";
 
 const languages = {
   af: af,
@@ -10,6 +11,7 @@ const languages = {
   en: en,
   nb: nb,
   sk: sk,
+  hu: hu,
 };
 
 export class localise {
