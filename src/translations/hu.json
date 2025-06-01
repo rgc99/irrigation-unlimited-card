@@ -1,0 +1,39 @@
+{
+  "common": {
+    "version": "Verzió",
+    "invalidConfiguration": "Hibás konfiguráció"
+  },
+  "editor": {
+    "title": { "name": "Név (opcionális)" },
+    "showControllers": { "name": "Vezérlők megjelenítése (CSV lista)" },
+    "alwaysShowZones": { "name": "Mindig mutassa a zónákat" },
+    "alwaysShowSequences": { "name": "Mindig mutassa a szekvenciákat" },
+    "showTimelineScheduled": { "name": "Jövőbeli idővonal megjelenítése" },
+    "showTimelineHistory": { "name": "Múltbeli idővonal megjelenítése" }
+  },
+  "controller": {
+    "zones": {
+      "name": "Zónák",
+      "buttonHint": "Zónák mutatása/elrejtése"
+    },
+    "sequences": {
+      "name": "Szekvenciák",
+      "buttonHint": "Szekvenciák mutatása/elrejtése"
+    }
+  },
+  "menu": {
+    "enable": { "name": "Engedélyez" },
+    "suspend": {
+      "name": "Felfüggesztés",
+      "hint": "Időtartam\n===============\nh:mm:ss\n<blank> = visszaállít"
+    },
+    "manual": { "name": "Kézi", "hint": "Időtartam" },
+    "pause": { "name": "Szünet" },
+    "resume": { "name": "Folytatás" },
+    "cancel": { "name": "Megszakítás" },
+    "adjust": {
+      "name": "Módosítás",
+      "hint": "Módosítási lehetőségek\n===============\nSzázalékos: %n\nJelenlegi: =0:00:00\nNövelés: +0:00:00\nCsökkentés: -0:00:00\nVisszaállít: <blank>"
+    }
+  }
+}
