@@ -1,0 +1,39 @@
+{
+  "common": {
+    "version": "Versiune",
+    "invalidConfiguration": "Configuraţie invalidă"
+  },
+  "editor": {
+    "title": { "name": "Titlu (optional)" },
+    "showControllers": { "name": "Afișează controlere (Listă CSV)" },
+    "alwaysShowZones": { "name": "Afișează întotdeauna zonele" },
+    "alwaysShowSequences": { "name": "Afișează întotdeauna secvenţele" },
+    "showTimelineScheduled": { "name": "Afișează cronologia programată" },
+    "showTimelineHistory": { "name": "Afișează istoricul cronologiei" }
+  },
+  "controller": {
+    "zones": {
+      "name": "Zone",
+      "buttonHint": "Afișează/ascunde zonele"
+    },
+    "sequences": {
+      "name": "Secvenţe",
+      "buttonHint": "Afișează/ascunde secvenţele"
+    }
+  },
+  "menu": {
+    "enable": { "name": "Activează" },
+    "suspend": {
+      "name": "Suspendă",
+      "hint": "Durată\n===============\nh:mm:ss\n<blank> = resetează"
+    },
+    "manual": { "name": "Manual", "hint": "Durată" },
+    "pause": { "name": "Pauză" },
+    "resume": { "name": "Reia" },
+    "cancel": { "name": "Renunţă" },
+    "adjust": {
+      "name": "Ajustează",
+      "hint": "Opțiuni de ajustare\n===============\nProcentaj: %n\nActual: =0:00:00\nCrește: +0:00:00\nScade: -0:00:00\nResetează: <blank>"
+    }
+  }
+}
