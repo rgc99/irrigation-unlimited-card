@@ -5,15 +5,17 @@ import * as nb from "./translations/nb.json";
 import * as sk from "./translations/sk.json";
 import * as hu from "./translations/hu.json";
 import * as ro from "./translations/ro.json";
+import * as it from "./translations/it.json";
 
 const languages = {
   af: af,
   de: de,
   en: en,
-  nb: nb,
-  sk: sk,
   hu: hu,
+  it: it,
+  nb: nb,
   ro: ro,
+  sk: sk,
 };
 
 export class localise {
