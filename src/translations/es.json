@@ -1,0 +1,39 @@
+{
+  "common": {
+    "version": "Versión",
+    "invalidConfiguration": "Configuración invalida"
+  },
+  "editor": {
+    "title": { "name": "Título (opcional)" },
+    "showControllers": { "name": "Mostrar controladores (lista CSV)" },
+    "alwaysShowZones": { "name": "Siempre mostrar zonas" },
+    "alwaysShowSequences": { "name": "Siempre mostrar secuencias" },
+    "showTimelineScheduled": { "name": "Mostrar cronología programada" },
+    "showTimelineHistory": { "name": "Mostrar el historial" }
+  },
+  "controller": {
+    "zones": {
+      "name": "Zonas",
+      "buttonHint": "Mostrar/ocultar zonas"
+    },
+    "sequences": {
+      "name": "Secuencias",
+      "buttonHint": "Mostrar/ocultar secuencias"
+    }
+  },
+  "menu": {
+    "enable": { "name": "Activar" },
+    "suspend": {
+      "name": "Pausar",
+      "hint": "Duración\n===============\nh:mm:ss\n<blank> = reset"
+    },
+    "manual": { "name": "Manual", "hint": "Duración" },
+    "pause": { "name": "Pausar" },
+    "resume": { "name": "Reanudar" },
+    "cancel": { "name": "Cancelar" },
+    "adjust": {
+      "name": "Ajustar",
+      "hint": "Opciones de ajuste\n===============\nPorcentual: %n\nActual: =0:00:00\nAumentar: +0:00:00\nReducir: -0:00:00\nReset: <blank>"
+    }
+  }
+}
