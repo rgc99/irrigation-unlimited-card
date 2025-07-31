@@ -6,11 +6,13 @@ import * as sk from "./translations/sk.json";
 import * as hu from "./translations/hu.json";
 import * as ro from "./translations/ro.json";
 import * as it from "./translations/it.json";
+import * as es from "./translations/es.json";
 
 const languages = {
   af: af,
   de: de,
   en: en,
+  es: es,
   hu: hu,
   it: it,
   nb: nb,
