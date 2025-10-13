@@ -1,1 +1,1 @@
-export const CARD_VERSION = "2025.8.0";
+export const CARD_VERSION = "2025.10.0";
