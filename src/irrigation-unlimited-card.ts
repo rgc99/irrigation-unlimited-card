@@ -829,13 +829,8 @@ export class IrrigationUnlimitedCard extends LitElement {
   }
 
   private _clickNet(e: Event): void {
-    const target = e.target as Element;
-    if (target.closest(".iu-menu")) return;
-
-    const menus = target
-      .closest("#iu-card")
-      ?.querySelectorAll(".iu-menu-content:not(.iu-hidden)");
-    menus?.forEach((p) => p.classList.add("iu-hidden"));
+    if ((e.target as Element).closest(".iu-menu")) return;
+    this._closeAllMenus(e);
   }
 
   private _toggleCollapse(e: Event): void {
@@ -858,11 +853,21 @@ export class IrrigationUnlimitedCard extends LitElement {
       ?.classList.toggle("iu-hidden");
   }
 
+  private _closeAllMenus(e: Event) {
+    const menus = (e.target as Element)
+      .closest("#iu-card")
+      ?.querySelectorAll(".iu-menu-content:not(.iu-hidden)");
+    menus?.forEach((p) => p.classList.add("iu-hidden"));
+  }
+
   private _toggleMenu(e: Event): void {
-    (e.target as Element)
+    const menu = (e.target as Element)
       .closest(".iu-menu")
-      ?.querySelector(".iu-menu-content")
-      ?.classList.toggle("iu-hidden");
+      ?.querySelector(".iu-menu-content");
+    if (menu?.classList.contains("iu-hidden")) this._closeAllMenus(e);
+    menu?.classList.toggle("iu-hidden");
+  }
+
   }
 
   private _get_iu_key(e: Event): string[] | undefined {
