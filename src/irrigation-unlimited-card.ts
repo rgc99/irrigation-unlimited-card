@@ -1004,7 +1004,14 @@ export class IrrigationUnlimitedCard extends LitElement {
         return;
     }
 
-    this.hass.callService("irrigation_unlimited", "adjust_time", data);
+    const keys = this._get_iu_key(e);
+    if ("reset" in data && keys && keys[1] === "0" && keys[2] === "0") {
+      this.hass.callService("irrigation_unlimited", "adjust_time", data);
+      data["sequence_id"] = 0;
+      this.hass.callService("irrigation_unlimited", "adjust_time", data);
+      data["zones"] = 0;
+      this.hass.callService("irrigation_unlimited", "adjust_time", data);
+    } else this.hass.callService("irrigation_unlimited", "adjust_time", data);
     this._toggleMenu(e);
   }
 }
