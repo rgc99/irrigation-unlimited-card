@@ -871,8 +871,8 @@ export class IrrigationUnlimitedCard extends LitElement {
     menu?.classList.toggle("iu-hidden");
   }
 
-  private _isEnterKey(e: Event): boolean {
-    return e instanceof KeyboardEvent && e.key === "Enter";
+  private _isNotEnterKey(e: Event): boolean {
+    return e instanceof KeyboardEvent && e.key !== "Enter";
   }
 
   private _get_iu_key(e: Event): string[] | undefined {
@@ -928,7 +928,7 @@ export class IrrigationUnlimitedCard extends LitElement {
   }
 
   private _serviceSuspend(e: Event): void {
-    if (!this._isEnterKey(e)) return;
+    if (this._isNotEnterKey(e)) return;
     const data = this._build_data(e);
     if (!data) return;
 
@@ -942,7 +942,7 @@ export class IrrigationUnlimitedCard extends LitElement {
   }
 
   private _serviceManualRun(e: Event): void {
-    if (!this._isEnterKey(e)) return;
+    if (this._isNotEnterKey(e)) return;
     const data = this._build_data(e);
     if (!data) return;
 
@@ -983,7 +983,7 @@ export class IrrigationUnlimitedCard extends LitElement {
   }
 
   private _serviceAdjust(e: Event): void {
-    if (!this._isEnterKey(e)) return;
+    if (this._isNotEnterKey(e)) return;
     const data = this._build_data(e);
     if (!data) return;
 
