@@ -123,6 +123,10 @@ class IUEntity extends IUBase {
   public update(hass: HomeAssistant): number {
     let result: number = IUUpdateStatus.None;
     const entity = hass.states[this.entity_id];
+    if (!entity) {
+      console.error("Entity does not exist: ", this.entity_id);
+      return result;
+    }
     const date = new Date(entity.last_updated);
 
     if (this.last_updated === undefined || date > this.last_updated) {
