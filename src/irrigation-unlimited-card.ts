@@ -839,7 +839,6 @@ export class IrrigationUnlimitedCard extends LitElement {
   private _toggleCollapse(e: Event): void {
     const target = (e.target as Element).closest(".iu-collapsible");
     target?.classList.toggle("iu-hidden");
-    this.requestUpdate();
   }
 
   private _toggleZones(e: Event): void {
