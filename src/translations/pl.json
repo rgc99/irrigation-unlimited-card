@@ -1,0 +1,39 @@
+{
+  "common": {
+    "version": "Wersja",
+    "invalidConfiguration": "Nieprawidłowa konfiguracja"
+  },
+  "editor": {
+    "title": { "name": "Tytuł (opcjonalnie)" },
+    "showControllers": { "name": "Pokaż kontrolery (lista CSV)" },
+    "alwaysShowZones": { "name": "Zawsze pokazuj strefy" },
+    "alwaysShowSequences": { "name": "Zawsze pokazuj sekwencje" },
+    "showTimelineScheduled": { "name": "Pokaż oś czasu planowania" },
+    "showTimelineHistory": { "name": "Pokaż historię" }
+  },
+  "controller": {
+    "zones": {
+      "name": "Strefy",
+      "buttonHint": "Pokaż/ukryj strefy"
+    },
+    "sequences": {
+      "name": "Sekwencje",
+      "buttonHint": "Pokaż/ukryj sekwencje"
+    }
+  },
+  "menu": {
+    "enable": { "name": "Aktywuj" },
+    "suspend": {
+      "name": "Zawieś",
+      "hint": "Czas trwania\n===============\nh:mm:ss\n<puste> = reset"
+    },
+    "manual": { "name": "Ręcznie", "hint": "Czas trwania" },
+    "pause": { "name": "Pauza" },
+    "resume": { "name": "Wznów" },
+    "cancel": { "name": "Anuluj" },
+    "adjust": {
+      "name": "Dostosuj",
+      "hint": "Opcje regulacji\n===============\nProcent: %n\nAktualne: =0:00:00\nZwiększ: +0:00:00\nZmniejsz: -0:00:00\nReset: <puste>"
+    }
+  }
+}

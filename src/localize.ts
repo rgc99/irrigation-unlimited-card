@@ -7,6 +7,7 @@ import * as hu from "./translations/hu.json";
 import * as ro from "./translations/ro.json";
 import * as it from "./translations/it.json";
 import * as es from "./translations/es.json";
+import * as pl from "./translations/pl.json";
 
 const languages = {
   af: af,
@@ -16,6 +17,7 @@ const languages = {
   hu: hu,
   it: it,
   nb: nb,
+  pl: pl,
   ro: ro,
   sk: sk,
 };
