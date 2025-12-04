@@ -123,10 +123,6 @@ class IUEntity extends IUBase {
   public update(hass: HomeAssistant): number {
     let result: number = IUUpdateStatus.None;
     const entity = hass.states[this.entity_id];
-    if (!entity) {
-      console.error("Entity does not exist: ", this.entity_id);
-      return result;
-    }
     const date = new Date(entity.last_updated);
 
     if (this.last_updated === undefined || date > this.last_updated) {
@@ -306,12 +302,39 @@ export class IUCoordinator {
     }
   }
 
+  private validateEntities(hass: HomeAssistant): void {
+    for (var i = this.controllers.length - 1; i >= 0; i--) {
+      const c = this.controllers[i];
+      if (hass.states[c.entity_id]) {
+        for (var j = c.zones.length - 1; j >= 0; j--) {
+          if (!hass.states[c.zones[j].entity_id]) {
+            console.error("Zone does not exist: ", c.zones[j].entity_id);
+            c.zones.pop();
+          }
+        }
+        for (var k = c.sequences.length - 1; k >= 0; k--) {
+          if (!hass.states[c.sequences[k].entity_id]) {
+            console.error(
+              "Sequence does not exist: ",
+              c.sequences[k].entity_id
+            );
+            c.sequences.pop();
+          }
+        }
+      } else {
+        console.error("Controller does not exist: ", c.entity_id);
+        this.controllers.pop();
+      }
+    }
+  }
+
   public init(hass: HomeAssistant): void {
     if (!hass || this.initialised) return;
     this._getInfo(hass).then((response) => {
       this.version = response.version;
       for (const c of response.controllers)
         this.controllers.push(new IUController(c));
+      this.validateEntities(hass);
       this.initialised = true;
       this.parent.requestUpdate();
     });
