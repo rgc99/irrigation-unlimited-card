@@ -47,18 +47,25 @@ export const styles = css`
     display: flex;
     align-items: center;
     min-height: 3em;
+    font-size: smaller;
+  }
+
+  .iu-timeline-row.iu-td {
+    font-size: smaller;
   }
 
   .iu-sequence-row.iu-td {
     display: flex;
     align-items: center;
     min-height: 3em;
+    font-size: smaller;
   }
 
   .iu-sequence-zone-row.iu-td {
     display: flex;
     align-items: center;
     height: 2em;
+    font-size: smaller;
   }
 
   .iu-td {
