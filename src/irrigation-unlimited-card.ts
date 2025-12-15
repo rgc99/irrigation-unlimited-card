@@ -411,7 +411,17 @@ export class IrrigationUnlimitedCard extends LitElement {
           </div>
           <div class="iu-td3">${startStr}</div>
           <div class="iu-td4 iu-schedule">${schedule_name}</div>
-          <div class="iu-td5 iu-duration">${duration}</div>
+          <div class="iu-td5">
+            <span class="iu-duration">${duration}</span>
+            <br ?hidden=${timeline.volume == null} />
+            <span class="iu-volume" ?hidden=${timeline.volume == null}
+              >${timeline.volume}</span
+            >
+            <br ?hidden=${timeline.flow_rate == null} />
+            <span class="iu-flow-rate" ?hidden=${timeline.flow_rate == null}
+              >${timeline.flow_rate}</span
+            >
+          </div>
           <div class="iu-td6 iu-adjustment">
             ${humanise_adjustment(timeline.adjustment)}
           </div>

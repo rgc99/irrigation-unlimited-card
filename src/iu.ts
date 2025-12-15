@@ -196,6 +196,8 @@ export interface IUTimeline {
   schedule_name: string;
   adjustment: string;
   status: string;
+  volume?: number;
+  flow_rate?: number;
 }
 
 export class IUSequence extends IUEntity {
