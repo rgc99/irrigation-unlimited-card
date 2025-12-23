@@ -402,6 +402,9 @@ export class IrrigationUnlimitedCard extends LitElement {
     if (timeline.schedule !== 0) schedule_name = timeline.schedule_name;
     else schedule_name = loc.t("menu.manual.name");
 
+    const dvf_present =
+      timeline.volume != null || timeline.flow_rate != null ? "iu-dvf" : "";
+
     return html`
       <div class=${classes.join(" ")}>
         <div class="iu-timeline-row iu-td">
@@ -411,16 +414,16 @@ export class IrrigationUnlimitedCard extends LitElement {
           </div>
           <div class="iu-td3">${startStr}</div>
           <div class="iu-td4 iu-schedule">${schedule_name}</div>
-          <div class="iu-td5">
-            <span class="iu-duration">${duration}</span>
-            <br ?hidden=${timeline.volume == null} />
-            <span class="iu-volume" ?hidden=${timeline.volume == null}
-              >${timeline.volume}</span
-            >
-            <br ?hidden=${timeline.flow_rate == null} />
-            <span class="iu-flow-rate" ?hidden=${timeline.flow_rate == null}
-              >${timeline.flow_rate}</span
-            >
+          <div class="iu-td5 ${dvf_present}">
+            <div class="iu-content">
+              <span class="iu-duration">${duration}</span>
+              <span class="iu-volume" ?hidden=${timeline.volume == null}
+                ><br />${timeline.volume}</span
+              >
+              <span class="iu-flow-rate" ?hidden=${timeline.flow_rate == null}
+                ><br />${timeline.flow_rate}</span
+              >
+            </div>
           </div>
           <div class="iu-td6 iu-adjustment">
             ${humanise_adjustment(timeline.adjustment)}

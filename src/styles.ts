@@ -54,6 +54,31 @@ export const styles = css`
     font-size: smaller;
   }
 
+  .iu-timeline-row > .iu-td5.iu-dvf {
+    height: 1em;
+    line-height: 1em;
+    overflow: hidden;
+  }
+
+  .iu-timeline-row > .iu-td5.iu-dvf > .iu-content {
+    animation: slide-up 6s linear infinite;
+  }
+
+  @keyframes slide-up {
+    0%,
+    33% {
+      transform: translateY(0);
+    }
+    42%,
+    58% {
+      transform: translateY(-33.3%);
+    }
+    67%,
+    83% {
+      transform: translateY(-66.7%);
+    }
+  }
+
   .iu-sequence-row.iu-td {
     display: flex;
     align-items: center;
