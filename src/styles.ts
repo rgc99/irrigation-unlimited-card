@@ -204,7 +204,6 @@ export const styles = css`
   /* Schedule colouring */
   .iu-schedule {
     color: var(--secondary-text-color, #727272);
-    font-size: small;
   }
 
   .iu-controller.iu-manual .iu-schedule,
