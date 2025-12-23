@@ -29,12 +29,14 @@ export const styles = css`
 
   .iu-hidden .iu-expander::before {
     content: "\u25B6";
-    font-size: large;
+    display: inline-block;
+    rotate: none;
   }
 
   .iu-expander::before {
-    content: "\u25BC";
-    font-size: large;
+    content: "\u25B6";
+    display: inline-block;
+    rotate: 90deg;
   }
 
   .iu-controller-row.iu-td {
@@ -99,7 +101,8 @@ export const styles = css`
   }
 
   .iu-td1 {
-    flex: 1.5em;
+    flex: auto;
+    width: 1.5em;
     text-align: center;
   }
 
